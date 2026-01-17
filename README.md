@@ -45,7 +45,7 @@ football-analytics/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/football-analytics.git
+git clone https://github.com/gauravahlawat01goal/football-analytics.git
 cd football-analytics
 ```
 
@@ -59,10 +59,44 @@ poetry install
 cp .env.example .env
 ```
 
-4. Add your SportsMonk API key to `.env`:
+4. Get your SportsMonk API key:
+   - Sign up at [SportsMonk](https://www.sportmonks.com/)
+   - Navigate to your dashboard and generate an API key
+   - Copy the API key
+
+5. Add your SportsMonk API key to `.env`:
 ```
 SPORTSMONK_API_KEY=your_api_key_here
 ```
+
+**Important**: The `.env` file is gitignored and will never be committed to the repository. Keep your API key secure and never share it publicly.
+
+## Security & API Key Management
+
+This project uses environment variables to securely manage the SportsMonk API key. Here's how it works:
+
+### Local Development (Recommended)
+
+- **Storage**: API key is stored in a `.env` file in the project root
+- **Security**: The `.env` file is listed in `.gitignore` and will never be committed to GitHub
+- **Usage**: The `python-dotenv` library automatically loads variables from `.env`
+- **Best Practice**: Never commit your `.env` file or share your API key publicly
+
+### GitHub Actions/Automation (Optional)
+
+If you want to set up automated workflows (e.g., scheduled data collection):
+
+1. Go to your GitHub repository Settings → Secrets and variables → Actions
+2. Click "New repository secret"
+3. Add `SPORTSMONK_API_KEY` as the name and your API key as the value
+4. Reference it in GitHub Actions workflows as `${{ secrets.SPORTSMONK_API_KEY }}`
+
+### For Portfolio Viewers
+
+If you're viewing this as a portfolio project and want to run it yourself:
+- You'll need to obtain your own SportsMonk API key (free tier available)
+- Follow the installation steps above to set up your local `.env` file
+- The analysis scripts and visualizations can be reproduced with your own API access
 
 ## Usage
 
@@ -140,6 +174,10 @@ Contributions are welcome! Please follow these steps:
 ## License
 
 This project is licensed under the MIT License.
+
+## About This Project
+
+This is a portfolio project showcasing data analysis and visualization skills applied to European football data. Analysis results and visualizations are shared on [X/Twitter](https://twitter.com/yourusername) with links back to this repository.
 
 ## Acknowledgments
 

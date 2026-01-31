@@ -131,6 +131,16 @@ fixtures_df = processor.fixtures_to_dataframe(fixtures)
 stats = processor.calculate_team_stats(fixtures_df, team_id=1)
 ```
 
+### Verifying API Connection
+
+To ensure your API key is working correctly, you can run the provided check script:
+
+```bash
+poetry run python scripts/check_api_connection.py
+```
+
+This script will attempt to connect to the SportsMonk API and fetch a list of leagues, confirming that your credentials are valid.
+
 ## Development
 
 ### Running Tests

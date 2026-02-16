@@ -1,6 +1,6 @@
 """Data processing utilities for football analytics."""
 
-from typing import Any, Dict, List
+from typing import Any
 
 import pandas as pd
 
@@ -9,7 +9,7 @@ class DataProcessor:
     """Process and transform football data from SportsMonk API."""
 
     @staticmethod
-    def fixtures_to_dataframe(fixtures_data: Dict[str, Any]) -> pd.DataFrame:
+    def fixtures_to_dataframe(fixtures_data: dict[str, Any]) -> pd.DataFrame:
         """
         Convert fixtures JSON data to a pandas DataFrame.
 
@@ -26,7 +26,7 @@ class DataProcessor:
         return pd.DataFrame(fixtures)
 
     @staticmethod
-    def teams_to_dataframe(teams_data: Dict[str, Any]) -> pd.DataFrame:
+    def teams_to_dataframe(teams_data: dict[str, Any]) -> pd.DataFrame:
         """
         Convert teams JSON data to a pandas DataFrame.
 
@@ -43,7 +43,7 @@ class DataProcessor:
         return pd.DataFrame(teams)
 
     @staticmethod
-    def calculate_team_stats(fixtures_df: pd.DataFrame, team_id: int) -> Dict[str, Any]:
+    def calculate_team_stats(fixtures_df: pd.DataFrame, team_id: int) -> dict[str, Any]:
         """
         Calculate statistics for a specific team.
 

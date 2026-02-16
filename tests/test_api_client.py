@@ -1,7 +1,6 @@
 """Tests for SportsMonk API client."""
 
 import pytest
-
 from football_analytics.api_client import SportsMonkClient
 
 

@@ -144,10 +144,10 @@ cython_debug/
 Thumbs.db
 
 # Project specific
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
+data/
+!data/.gitkeep
+docs/
+logs/
 *.csv
 *.json
 *.parquet

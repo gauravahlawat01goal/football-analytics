@@ -47,6 +47,16 @@ class BallCoordinateProcessor:
     LEFT_WING_Y = 0.25
     RIGHT_WING_Y = 0.75
     
+    # Possession inference thresholds (in minutes)
+    POSSESSION_HIGH_CONFIDENCE_THRESHOLD = 0.17  # 10 seconds
+    POSSESSION_MEDIUM_CONFIDENCE_THRESHOLD = 0.33  # 20 seconds
+    POSSESSION_TURNOVER_WINDOW = 0.33  # 20 seconds
+    
+    # Validation constants
+    MIN_FIXTURE_ID = 1
+    ASSUMED_MATCH_DURATION = 95  # minutes (90 + ~5 stoppage)
+    TIMER_DATA_THRESHOLD = 0.8  # 80% of coordinates must have timer data
+    
     def __init__(self, data_dir: str = "data/raw"):
         """Initialize ball coordinate processor."""
         self.data_dir = Path(data_dir)
@@ -69,6 +79,10 @@ class BallCoordinateProcessor:
             >>> print(df.columns)
             ['x', 'y', 'fixture_id', 'sequence', 'pitch_zone', 'width_zone', ...]
         """
+        # Validate input
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(f"Invalid fixture_id: {fixture_id}. Must be a positive integer.")
+        
         # Load raw JSON
         fixture_dir = self.data_dir / str(fixture_id)
         coords_file = fixture_dir / "ballCoordinates.json"
@@ -77,20 +91,31 @@ class BallCoordinateProcessor:
             self.logger.error(f"Ball coordinates not found for fixture {fixture_id}")
             return pd.DataFrame()
         
-        coords_data = load_json_file(coords_file)
+        try:
+            coords_data = load_json_file(coords_file)
+        except Exception as e:
+            self.logger.error(f"Failed to load ball coordinates for fixture {fixture_id}: {e}")
+            return pd.DataFrame()
         
-        # Extract coordinates from API response
-        if "data" in coords_data:
+        # Extract coordinates from API response - handle nested structure
+        if "data" in coords_data and isinstance(coords_data["data"], dict):
+            # API response structure: data.data.ballcoordinates
+            coords_list = coords_data["data"].get("ballcoordinates", [])
+        elif "data" in coords_data:
             coords_list = coords_data["data"]
         else:
             coords_list = coords_data
-        
-        if not coords_list:
+
+        if not coords_list or not isinstance(coords_list, list):
             self.logger.warning(f"No ball coordinates in file for fixture {fixture_id}")
             return pd.DataFrame()
         
         # Convert to DataFrame
-        df = pd.DataFrame(coords_list)
+        try:
+            df = pd.DataFrame(coords_list)
+        except Exception as e:
+            self.logger.error(f"Failed to create DataFrame from coordinates: {e}")
+            return pd.DataFrame()
         
         # Convert data types
         df["x"] = pd.to_numeric(df["x"], errors="coerce")
@@ -196,6 +221,8 @@ class BallCoordinateProcessor:
         """
         Calculate distance from ball to attacking goal.
         
+        Assumes attacking direction is towards x=1.0, y=0.5 (center of goal).
+        
         Args:
             row: DataFrame row with x and y coordinates
         
@@ -242,7 +269,7 @@ class BallCoordinateProcessor:
             >>> print(coords_df["estimated_minute"].describe())
         """
         # Strategy 1: If period_id and minute available, use directly
-        if "minute" in coords_df.columns and coords_df["minute"].notna().sum() > len(coords_df) * 0.8:
+        if "minute" in coords_df.columns and coords_df["minute"].notna().sum() > len(coords_df) * self.TIMER_DATA_THRESHOLD:
             self.logger.info("Using timer field for timestamps")
             coords_df["estimated_minute"] = coords_df["minute"] + coords_df.get("second", 0) / 60
             return coords_df
@@ -289,6 +316,7 @@ class BallCoordinateProcessor:
             duration = max_minute - min_minute
             
             if duration <= 0:
+                self.logger.warning(f"Period {period_id}: Invalid duration ({duration}), using default 45 minutes")
                 duration = 45  # Default period duration
             
             # Map sequence within period to time
@@ -320,12 +348,12 @@ class BallCoordinateProcessor:
         """
         total_coords = len(coords_df)
         
-        # Assume 90 minutes base + some stoppage time
-        # Typical: 6-8 coordinates per minute
-        assumed_duration = 95  # minutes (90 + ~5 stoppage)
+        if total_coords == 0:
+            return coords_df
         
+        # Assume 90 minutes base + some stoppage time (typical: 6-8 coordinates per minute)
         coords_df["estimated_minute"] = (
-            coords_df["sequence"] / total_coords * assumed_duration
+            coords_df["sequence"] / total_coords * self.ASSUMED_MATCH_DURATION
         )
         
         return coords_df
@@ -359,6 +387,9 @@ class BallCoordinateProcessor:
         if pd.isna(event_minute) or "estimated_minute" not in coords_df.columns:
             return None
         
+        if not isinstance(tolerance_seconds, (int, float)) or tolerance_seconds <= 0:
+            raise ValueError(f"Invalid tolerance_seconds: {tolerance_seconds}. Must be a positive number.")
+        
         tolerance_minutes = tolerance_seconds / 60
         
         # Find coordinates within tolerance
@@ -383,7 +414,8 @@ class BallCoordinateProcessor:
         """
         Infer which team has possession at each coordinate.
         
-        Strategy: Use events as possession markers, interpolate between events
+        Strategy: Use events as possession markers, interpolate between events.
+        Uses vectorized merge_asof for efficient nearest-neighbor matching.
         
         Args:
             coords_df: Ball coordinates with estimated_minute
@@ -399,9 +431,16 @@ class BallCoordinateProcessor:
             >>> possession_rate = (coords_df["possession_team"] == 8).sum() / len(coords_df)
             >>> print(f"Liverpool possession: {possession_rate*100:.1f}%")
         """
+        # Validate inputs
+        if len(coords_df) == 0 or len(events_df) == 0:
+            self.logger.warning("Cannot infer possession: empty DataFrames")
+            coords_df["possession_team"] = pd.NA
+            coords_df["possession_confidence"] = pd.NA
+            return coords_df
+        
         # Initialize possession columns
-        coords_df["possession_team"] = None
-        coords_df["possession_confidence"] = None
+        coords_df["possession_team"] = pd.NA
+        coords_df["possession_confidence"] = pd.NA
         
         # Possession-indicating events
         possession_events = [
@@ -422,48 +461,52 @@ class BallCoordinateProcessor:
             events_df[type_col].str.lower().str.contains("|".join(possession_events), na=False)
         ].copy()
         
-        poss_events = poss_events.sort_values("minute")
+        if len(poss_events) == 0:
+            self.logger.warning("No possession events found for inference")
+            return coords_df
         
-        # For each coordinate, find nearest possession event
-        for idx, coord in coords_df.iterrows():
-            if "estimated_minute" not in coord or pd.isna(coord["estimated_minute"]):
-                continue
-            
-            coord_time = coord["estimated_minute"]
-            
-            # Find events before and after
-            events_before = poss_events[poss_events["minute"] <= coord_time]
-            events_after = poss_events[poss_events["minute"] > coord_time]
-            
-            if len(events_before) > 0:
-                last_event = events_before.iloc[-1]
-                time_since_event = coord_time - last_event["minute"]
-                
-                # Assign possession based on time proximity
-                if time_since_event < 0.17:  # 10 seconds
-                    coords_df.at[idx, "possession_team"] = last_event.get("team_id")
-                    coords_df.at[idx, "possession_confidence"] = "high"
-                elif time_since_event < 0.33:  # 20 seconds
-                    coords_df.at[idx, "possession_team"] = last_event.get("team_id")
-                    coords_df.at[idx, "possession_confidence"] = "medium"
-                else:
-                    # Check if next event is from different team (indicates turnover)
-                    if len(events_after) > 0:
-                        next_event = events_after.iloc[0]
-                        time_to_next = next_event["minute"] - coord_time
-                        
-                        if time_to_next < 0.33 and next_event.get("team_id") != last_event.get("team_id"):
-                            # Likely turnover period - assign to next team
-                            coords_df.at[idx, "possession_team"] = next_event.get("team_id")
-                            coords_df.at[idx, "possession_confidence"] = "low"
-                        else:
-                            # Use last known possession
-                            coords_df.at[idx, "possession_team"] = last_event.get("team_id")
-                            coords_df.at[idx, "possession_confidence"] = "low"
+        poss_events = poss_events.sort_values("minute").reset_index(drop=True)
+        
+        # Use merge_asof for efficient nearest-neighbor matching (vectorized approach)
+        coords_with_time = coords_df[coords_df["estimated_minute"].notna()].copy()
+        
+        if len(coords_with_time) == 0:
+            self.logger.warning("No coordinates with estimated_minute for possession inference")
+            return coords_df
+        
+        # Sort for merge_asof
+        coords_with_time = coords_with_time.sort_values("estimated_minute").reset_index()
+        
+        # Find closest previous event for each coordinate
+        merged = pd.merge_asof(
+            coords_with_time[["index", "estimated_minute"]],
+            poss_events[["minute", "team_id"]],
+            left_on="estimated_minute",
+            right_on="minute",
+            direction="backward",
+            suffixes=("", "_event")
+        )
+        
+        # Calculate time since last event
+        merged["time_since_event"] = merged["estimated_minute"] - merged["minute"]
+        
+        # Assign confidence based on time proximity using vectorized operations
+        conditions = [
+            merged["time_since_event"] < self.POSSESSION_HIGH_CONFIDENCE_THRESHOLD,
+            (merged["time_since_event"] >= self.POSSESSION_HIGH_CONFIDENCE_THRESHOLD) & 
+            (merged["time_since_event"] < self.POSSESSION_MEDIUM_CONFIDENCE_THRESHOLD),
+            merged["time_since_event"] >= self.POSSESSION_MEDIUM_CONFIDENCE_THRESHOLD
+        ]
+        choices = ["high", "medium", "low"]
+        merged["possession_confidence"] = np.select(conditions, choices, default=pd.NA)
+        
+        # Update coords_df with inferred possession
+        coords_df.loc[merged["index"], "possession_team"] = merged["team_id"].values
+        coords_df.loc[merged["index"], "possession_confidence"] = merged["possession_confidence"].values
         
         # Count possession inference success
         inferred_count = coords_df["possession_team"].notna().sum()
-        inferred_pct = inferred_count / len(coords_df) * 100
+        inferred_pct = inferred_count / len(coords_df) * 100 if len(coords_df) > 0 else 0
         
         self.logger.info(f"Possession inferred for {inferred_count}/{len(coords_df)} coordinates ({inferred_pct:.1f}%)")
         
@@ -492,6 +535,13 @@ class BallCoordinateProcessor:
             >>> print(f"Validation: {validation['validation']}")
             >>> print(f"Difference: {validation['difference']:.1f}%")
         """
+        # Validate inputs
+        if official_possession is not None:
+            if not isinstance(official_possession, (int, float)):
+                raise ValueError(f"Invalid official_possession: {official_possession}. Must be numeric.")
+            if not 0 <= official_possession <= 100:
+                raise ValueError(f"Invalid official_possession: {official_possession}. Must be between 0 and 100.")
+        
         # Calculate possession from coordinates
         total_coords = len(coords_df)
         liverpool_coords = (coords_df["possession_team"] == liverpool_team_id).sum()

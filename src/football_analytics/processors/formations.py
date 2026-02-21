@@ -25,71 +25,143 @@ from ..utils.logging_utils import get_logger
 class FormationParser:
     """
     Parse and analyze team formations and lineups.
-    
+
     Extracts formation data, player positions, and lineup information
     for tactical analysis.
-    
+
     Args:
         data_dir: Base directory containing raw data
-    
+
     Example:
         >>> parser = FormationParser()
         >>> lineups = parser.parse_lineups(18841624)
         >>> formations = parser.parse_formations(18841624)
         >>> liverpool_lineup = lineups[lineups['team_name'] == 'Liverpool']
     """
-    
+
     # Position categories
     GOALKEEPER_POSITIONS = ["GK", "Goalkeeper"]
     DEFENDER_POSITIONS = ["CB", "LB", "RB", "LWB", "RWB", "DF"]
     MIDFIELDER_POSITIONS = ["CDM", "CM", "CAM", "LM", "RM", "DM", "AM"]
     FORWARD_POSITIONS = ["ST", "CF", "LW", "RW", "FW"]
+
+    # Validation constants
+    MIN_FIXTURE_ID = 1000000  # Minimum valid fixture ID
+    MIN_TEAM_ID = 1  # Minimum valid team ID
+    MIN_PLAYER_ID = 1  # Minimum valid player ID
     
     def __init__(self, data_dir: str = "data/raw"):
         """Initialize formation parser."""
         self.data_dir = Path(data_dir)
         self.logger = get_logger(self.__class__.__name__)
-    
+
+    def _get_team_name_mapping(self, fixture_id: int) -> dict[int, str]:
+        """
+        Load team name mapping from participants file.
+
+        Args:
+            fixture_id: Fixture ID to load participants for
+
+        Returns:
+            Dictionary mapping team_id to team_name
+
+        Example:
+            >>> parser = FormationParser()
+            >>> mapping = parser._get_team_name_mapping(18841624)
+            >>> print(mapping)  # {8: 'Liverpool', 18: 'Chelsea'}
+        """
+        fixture_dir = self.data_dir / str(fixture_id)
+        participants_file = fixture_dir / "participants.json"
+
+        if not participants_file.exists():
+            self.logger.warning(f"Participants file not found for fixture {fixture_id}")
+            return {}
+
+        try:
+            participants_data = load_json_file(participants_file)
+
+            # Extract participants list
+            if "data" in participants_data and isinstance(participants_data["data"], dict):
+                participants_list = participants_data["data"].get("participants", [])
+            elif "data" in participants_data:
+                participants_list = participants_data["data"]
+            else:
+                participants_list = participants_data
+
+            # Build mapping
+            team_mapping = {}
+            if isinstance(participants_list, list):
+                for participant in participants_list:
+                    if isinstance(participant, dict):
+                        team_id = participant.get("id")
+                        team_name = participant.get("name", "Unknown")
+                        if team_id:
+                            team_mapping[team_id] = team_name
+
+            return team_mapping
+
+        except Exception as e:
+            self.logger.warning(f"Failed to load team names from participants: {e}")
+            return {}
+
     def parse_lineups(self, fixture_id: int, season: Optional[str] = None) -> pd.DataFrame:
         """
         Parse player lineups from match data.
-        
+
         Args:
             fixture_id: Fixture ID to process
             season: Optional season identifier
-        
+
         Returns:
             DataFrame with player lineup information
-        
+
         Example:
             >>> parser = FormationParser()
             >>> lineups = parser.parse_lineups(18841624)
             >>> print(lineups[['player_name', 'position', 'team_name', 'starting']].head())
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(
+                f"Invalid fixture_id: {fixture_id}. "
+                f"Must be integer >= {self.MIN_FIXTURE_ID}"
+            )
+
         # Load raw JSON
         fixture_dir = self.data_dir / str(fixture_id)
         lineups_file = fixture_dir / "lineups.json"
-        
+
         if not lineups_file.exists():
             self.logger.error(f"Lineups file not found for fixture {fixture_id}")
             return pd.DataFrame()
-        
-        lineups_data = load_json_file(lineups_file)
+
+        try:
+            lineups_data = load_json_file(lineups_file)
+        except Exception as e:
+            self.logger.error(f"Failed to load lineups file for fixture {fixture_id}: {e}")
+            return pd.DataFrame()
         
         # Extract lineups from API response
-        if "data" in lineups_data:
+        # Extract lineups from API response - handle nested structure
+        if "data" in lineups_data and isinstance(lineups_data["data"], dict):
+            # API response structure: data.data.lineups
+            lineups_list = lineups_data["data"].get("lineups", [])
+        elif "data" in lineups_data:
             lineups_list = lineups_data["data"]
         else:
             lineups_list = lineups_data
-        
-        if not lineups_list:
+
+        if not lineups_list or not isinstance(lineups_list, list):
             self.logger.warning(f"No lineups in file for fixture {fixture_id}")
             return pd.DataFrame()
-        
+
+        # Load team name mapping from participants
+        team_name_mapping = self._get_team_name_mapping(fixture_id)
+
         # Parse each player
         parsed_lineups = []
         for lineup_entry in lineups_list:
-            parsed_entry = self._parse_lineup_entry(lineup_entry, fixture_id)
+            parsed_entry = self._parse_lineup_entry(lineup_entry, fixture_id, team_name_mapping)
             if parsed_entry:
                 parsed_lineups.append(parsed_entry)
         
@@ -104,39 +176,44 @@ class FormationParser:
         
         return df
     
-    def _parse_lineup_entry(self, entry: dict, fixture_id: int) -> Optional[dict]:
+    def _parse_lineup_entry(self, entry: dict, fixture_id: int, team_name_mapping: dict[int, str] = None) -> Optional[dict]:
         """
         Parse a single lineup entry.
-        
+
         Args:
             entry: Raw lineup dictionary
             fixture_id: Fixture ID
-        
+            team_name_mapping: Optional mapping of team_id to team_name
+
         Returns:
             Parsed lineup dictionary or None if invalid
         """
+        if team_name_mapping is None:
+            team_name_mapping = {}
         try:
-            # Extract player info
+            # Extract player info - try nested first, then direct
             player_data = entry.get("player", {})
-            if isinstance(player_data, dict):
+            if isinstance(player_data, dict) and player_data:
                 player_id = player_data.get("id")
                 player_name = player_data.get("display_name", "Unknown")
             else:
+                # Direct structure
                 player_id = entry.get("player_id")
-                player_name = "Unknown"
-            
-            # Extract team info
+                player_name = entry.get("player_name", "Unknown")
+
+            # Extract team info - try nested first, then direct
             participant_data = entry.get("participant", {})
-            if isinstance(participant_data, dict):
+            if isinstance(participant_data, dict) and participant_data:
                 team_id = participant_data.get("id")
                 team_name = participant_data.get("name", "Unknown")
             else:
-                team_id = entry.get("participant_id")
-                team_name = "Unknown"
-            
-            # Extract position info
+                # Direct structure - get team_id and lookup name from mapping
+                team_id = entry.get("team_id")
+                team_name = team_name_mapping.get(team_id, f"Team_{team_id}")
+
+            # Extract position info - try nested first, then direct
             detailed_position = entry.get("detailedPosition", {})
-            if isinstance(detailed_position, dict):
+            if isinstance(detailed_position, dict) and detailed_position:
                 position = detailed_position.get("name", "Unknown")
             else:
                 position = entry.get("position", "Unknown")
@@ -155,6 +232,10 @@ class FormationParser:
                 except ValueError:
                     pass
             
+            # Determine if starting XI - type_id 11 is starting player
+            type_id = entry.get("type_id")
+            starting = entry.get("starting", type_id == 11 if type_id else False)
+
             parsed_entry = {
                 "fixture_id": fixture_id,
                 "player_id": player_id,
@@ -166,7 +247,7 @@ class FormationParser:
                 "formation_x": formation_x,
                 "formation_y": formation_y,
                 "jersey_number": entry.get("jersey_number"),
-                "starting": entry.get("starting", False),
+                "starting": starting,
                 "captain": entry.get("captain", False),
             }
             
@@ -210,36 +291,51 @@ class FormationParser:
     def parse_formations(self, fixture_id: int, season: Optional[str] = None) -> pd.DataFrame:
         """
         Parse team formations from match data.
-        
+
         Args:
             fixture_id: Fixture ID to process
             season: Optional season identifier
-        
+
         Returns:
             DataFrame with formation information
-        
+
         Example:
             >>> parser = FormationParser()
             >>> formations = parser.parse_formations(18841624)
             >>> print(formations[['team_name', 'formation', 'location']].head())
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(
+                f"Invalid fixture_id: {fixture_id}. "
+                f"Must be integer >= {self.MIN_FIXTURE_ID}"
+            )
+
         # Load raw JSON
         fixture_dir = self.data_dir / str(fixture_id)
         formations_file = fixture_dir / "formations.json"
-        
+
         if not formations_file.exists():
             self.logger.warning(f"Formations file not found for fixture {fixture_id}")
             return pd.DataFrame()
-        
-        formations_data = load_json_file(formations_file)
+
+        try:
+            formations_data = load_json_file(formations_file)
+        except Exception as e:
+            self.logger.error(f"Failed to load formations file for fixture {fixture_id}: {e}")
+            return pd.DataFrame()
         
         # Extract formations from API response
-        if "data" in formations_data:
+        # Extract formations from API response - handle nested structure
+        if "data" in formations_data and isinstance(formations_data["data"], dict):
+            # API response structure: data.data.formations
+            formations_list = formations_data["data"].get("formations", [])
+        elif "data" in formations_data:
             formations_list = formations_data["data"]
         else:
             formations_list = formations_data
-        
-        if not formations_list:
+
+        if not formations_list or not isinstance(formations_list, list):
             self.logger.warning(f"No formations in file for fixture {fixture_id}")
             return pd.DataFrame()
         
@@ -283,25 +379,31 @@ class FormationParser:
     ) -> pd.DataFrame:
         """
         Extract lineup for a specific team.
-        
+
         Args:
             lineups_df: Lineups DataFrame
             team_id: Team ID to filter
             starting_only: If True, return only starting XI
-        
+
         Returns:
             Filtered DataFrame
-        
+
         Example:
             >>> parser = FormationParser()
             >>> liverpool_starting = parser.get_team_lineup(lineups_df, 8, starting_only=True)
             >>> print(f"Liverpool starting XI: {len(liverpool_starting)} players")
         """
+        # Input validation
+        if not isinstance(team_id, int) or team_id < self.MIN_TEAM_ID:
+            raise ValueError(
+                f"Invalid team_id: {team_id}. Must be integer >= {self.MIN_TEAM_ID}"
+            )
+
         team_lineup = lineups_df[lineups_df["team_id"] == team_id].copy()
-        
+
         if starting_only:
-            team_lineup = team_lineup[team_lineup["starting"] == True]
-        
+            team_lineup = team_lineup[team_lineup["starting"]]
+
         return team_lineup
     
     def get_player_position(
@@ -311,20 +413,26 @@ class FormationParser:
     ) -> Optional[dict]:
         """
         Get position information for a specific player in a match.
-        
+
         Args:
             lineups_df: Lineups DataFrame
             player_id: Player ID
-        
+
         Returns:
             Dictionary with player position info or None
-        
+
         Example:
             >>> parser = FormationParser()
             >>> position_info = parser.get_player_position(lineups_df, 123456)
             >>> if position_info:
             ...     print(f"Position: {position_info['position']}")
         """
+        # Input validation
+        if not isinstance(player_id, int) or player_id < self.MIN_PLAYER_ID:
+            raise ValueError(
+                f"Invalid player_id: {player_id}. Must be integer >= {self.MIN_PLAYER_ID}"
+            )
+
         player_lineup = lineups_df[lineups_df["player_id"] == player_id]
         
         if len(player_lineup) == 0:
@@ -345,13 +453,13 @@ class FormationParser:
     def extract_formation_shape(self, formation_str: Optional[str]) -> Optional[dict]:
         """
         Parse formation string (e.g., "4-3-3") into structured shape.
-        
+
         Args:
             formation_str: Formation string (e.g., "4-3-3", "4-2-3-1")
-        
+
         Returns:
             Dictionary with formation structure or None
-        
+
         Example:
             >>> parser = FormationParser()
             >>> shape = parser.extract_formation_shape("4-3-3")
@@ -359,7 +467,11 @@ class FormationParser:
         """
         if not formation_str or not isinstance(formation_str, str):
             return None
-        
+
+        # Validate formation string format
+        if not formation_str.strip():
+            return None
+
         try:
             parts = formation_str.split("-")
             numbers = [int(p) for p in parts]

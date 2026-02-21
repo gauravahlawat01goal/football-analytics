@@ -28,8 +28,36 @@ from football_analytics.processors import (
     PlayerIDExtractor,
 )
 from football_analytics.utils import DataQualityValidator, setup_logging
+from football_analytics.utils.logging_utils import get_logger
 
-logger = setup_logging(__name__)
+# Configure logging
+setup_logging()
+logger = get_logger(__name__)
+
+
+def _scan_fixture_directories(data_dir: Path) -> list[int]:
+    """
+    Scan data directory for fixture subdirectories.
+
+    Args:
+        data_dir: Path to data directory
+
+    Returns:
+        List of fixture IDs found in directory
+
+    Raises:
+        ValueError: If data_dir doesn't exist or is not a directory
+    """
+    if not data_dir.exists():
+        raise ValueError(f"Data directory does not exist: {data_dir}")
+
+    if not data_dir.is_dir():
+        raise ValueError(f"Path is not a directory: {data_dir}")
+
+    fixture_dirs = [d for d in data_dir.iterdir() if d.is_dir() and d.name.isdigit()]
+    fixture_ids = [int(d.name) for d in fixture_dirs]
+
+    return sorted(fixture_ids)
 
 
 def process_single_fixture(fixture_id: int):
@@ -107,12 +135,16 @@ def process_single_fixture(fixture_id: int):
     logger.info("\n7. Saving processed data...")
     output_dir = Path("data/processed/fixtures") / str(fixture_id)
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    coords_df.to_parquet(output_dir / "ball_coordinates.parquet", index=False)
-    events_df.to_csv(output_dir / "events.csv", index=False)
-    lineups_df.to_csv(output_dir / "lineups.csv", index=False)
-    formations_df.to_csv(output_dir / "formations.csv", index=False)
-    
+
+    try:
+        coords_df.to_csv(output_dir / "ball_coordinates.csv", index=False, encoding='utf-8')
+        events_df.to_csv(output_dir / "events.csv", index=False, encoding='utf-8')
+        lineups_df.to_csv(output_dir / "lineups.csv", index=False, encoding='utf-8')
+        formations_df.to_csv(output_dir / "formations.csv", index=False, encoding='utf-8')
+    except Exception as e:
+        logger.error(f"   ❌ Failed to save processed data: {e}")
+        return False
+
     logger.info(f"   ✅ Saved to {output_dir}")
     
     logger.info("\n" + "=" * 80)
@@ -125,11 +157,10 @@ def process_single_fixture(fixture_id: int):
 def process_all_fixtures():
     """Process all fixtures found in data/raw directory."""
     logger.info("Processing all fixtures...")
-    
+
     data_dir = Path("data/raw")
-    fixture_dirs = [d for d in data_dir.iterdir() if d.is_dir() and d.name.isdigit()]
-    fixture_ids = [int(d.name) for d in fixture_dirs]
-    
+    fixture_ids = _scan_fixture_directories(data_dir)
+
     logger.info(f"Found {len(fixture_ids)} fixtures to process")
     
     success_count = 0
@@ -160,15 +191,14 @@ def process_all_fixtures():
 def extract_player_database():
     """Extract complete player database from all fixtures."""
     logger.info("Extracting player database...")
-    
+
     data_dir = Path("data/raw")
-    fixture_dirs = [d for d in data_dir.iterdir() if d.is_dir() and d.name.isdigit()]
-    fixture_ids = [int(d.name) for d in fixture_dirs]
-    
+    fixture_ids = _scan_fixture_directories(data_dir)
+
     logger.info(f"Processing {len(fixture_ids)} fixtures...")
     
     extractor = PlayerIDExtractor()
-    players_df = extractor.extract_all_players(fixture_ids, team_name="Liverpool")
+    players_df = extractor.extract_all_players(fixture_ids, team_id=8)  # 8 = Liverpool
     
     # Find key players
     key_players = extractor.find_key_players(players_df)
@@ -207,30 +237,29 @@ def main():
     )
     
     args = parser.parse_args()
-    
+
     # Validate arguments
-    if not any([args.fixture_id, args.all, args.extract_players]):
+    if args.fixture_id is None and not args.all and not args.extract_players:
         parser.error("Must specify --fixture-id, --all, or --extract-players")
-    
+
     try:
         if args.validate_only:
             # Just validate
             validator = DataQualityValidator()
-            
-            if args.fixture_id:
+
+            if args.fixture_id is not None:
                 report = validator.validate_fixture(args.fixture_id)
                 logger.info(f"Validation: {report['status']} (Score: {report['quality_score']}/100)")
             elif args.all:
                 data_dir = Path("data/raw")
-                fixture_dirs = [d for d in data_dir.iterdir() if d.is_dir() and d.name.isdigit()]
-                fixture_ids = [int(d.name) for d in fixture_dirs]
+                fixture_ids = _scan_fixture_directories(data_dir)
                 results_df = validator.validate_multiple_fixtures(fixture_ids)
                 validator.save_validation_report(results_df)
         
         elif args.extract_players:
             extract_player_database()
-        
-        elif args.fixture_id:
+
+        elif args.fixture_id is not None:
             success = process_single_fixture(args.fixture_id)
             sys.exit(0 if success else 1)
         

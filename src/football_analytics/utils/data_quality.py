@@ -14,6 +14,7 @@ Key features:
 - Threshold-based pass/fail
 """
 
+import random
 from pathlib import Path
 from typing import Optional
 
@@ -48,6 +49,13 @@ class DataQualityValidator:
     MIN_EVENTS = 50  # Minimum events per match
     MIN_LINEUPS = 20  # Minimum lineup entries (2 teams * 11 players)
     EVENT_LINK_SUCCESS_THRESHOLD = 80.0  # Percentage
+
+    # Validation constants
+    MIN_VALID_COORD_PERCENTAGE = 95.0  # Minimum % of valid coordinates
+    MIN_QUALITY_SCORE_WITH_WARNINGS = 70  # Score threshold for pass with warnings
+    COORDS_SAMPLE_SIZE = 100  # Number of coordinates to sample for validation
+    EVENTS_SAMPLE_SIZE = 50  # Number of events to sample for validation
+    MIN_FIXTURE_ID = 1000000  # Minimum valid fixture ID
     
     def __init__(
         self,
@@ -66,13 +74,13 @@ class DataQualityValidator:
     def validate_fixture(self, fixture_id: int) -> dict:
         """
         Validate all data for a single fixture.
-        
+
         Args:
             fixture_id: Fixture ID to validate
-        
+
         Returns:
             Dictionary with validation results and quality score
-        
+
         Example:
             >>> validator = DataQualityValidator()
             >>> report = validator.validate_fixture(18841624)
@@ -81,6 +89,13 @@ class DataQualityValidator:
             >>> else:
             ...     print(f"⚠️  Issues: {report['issues']}")
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(
+                f"Invalid fixture_id: {fixture_id}. "
+                f"Must be integer >= {self.MIN_FIXTURE_ID}"
+            )
+
         fixture_dir = self.data_dir / str(fixture_id)
         
         # Initialize report
@@ -131,7 +146,7 @@ class DataQualityValidator:
         # Determine overall status
         if len(report["issues"]) == 0:
             report["status"] = "PASS"
-        elif report["quality_score"] >= 70:
+        elif report["quality_score"] >= self.MIN_QUALITY_SCORE_WITH_WARNINGS:
             report["status"] = "PASS_WITH_WARNINGS"
         else:
             report["status"] = "FAIL"
@@ -199,21 +214,33 @@ class DataQualityValidator:
         
         try:
             coords_data = load_json_file(coords_file)
-            
-            # Extract coordinates
-            if "data" in coords_data:
+
+            # Extract coordinates - handle nested structure
+            if "data" in coords_data and isinstance(coords_data["data"], dict):
+                # API response structure: data.data.ballcoordinates
+                coords_list = coords_data["data"].get("ballcoordinates", [])
+            elif "data" in coords_data:
                 coords_list = coords_data["data"]
             else:
                 coords_list = coords_data
-            
+
+            # Ensure it's a list
+            if isinstance(coords_list, dict):
+                coords_list = list(coords_list.values())
+            elif not isinstance(coords_list, list):
+                coords_list = []
+
             count = len(coords_list)
-            
+
             # Check minimum threshold
             passed = count >= self.min_ball_coordinates
-            
-            # Check for valid coordinates
+
+            # Check for valid coordinates using random sampling
+            sample_size = min(self.COORDS_SAMPLE_SIZE, count)
+            coords_sample = random.sample(coords_list, sample_size) if count > 0 else []
+
             valid_coords = 0
-            for coord in coords_list[:100]:  # Sample first 100
+            for coord in coords_sample:
                 try:
                     x = float(coord.get("x", 0))
                     y = float(coord.get("y", 0))
@@ -221,8 +248,8 @@ class DataQualityValidator:
                         valid_coords += 1
                 except (ValueError, TypeError):
                     pass
-            
-            valid_pct = valid_coords / min(100, count) * 100 if count > 0 else 0
+
+            valid_pct = valid_coords / sample_size * 100 if sample_size > 0 else 0
             
             result = {
                 "passed": passed,
@@ -236,8 +263,8 @@ class DataQualityValidator:
                 result["issues"].append(
                     f"Ball coordinates below threshold: {count} < {self.min_ball_coordinates}"
                 )
-            
-            if valid_pct < 95:
+
+            if valid_pct < self.MIN_VALID_COORD_PERCENTAGE:
                 result["warnings"].append(
                     f"Some invalid coordinates detected: {valid_pct:.1f}% valid"
                 )
@@ -266,32 +293,42 @@ class DataQualityValidator:
         
         try:
             events_data = load_json_file(events_file)
-            
-            # Extract events
-            if "data" in events_data:
+
+            # Extract events - handle nested structure
+            if "data" in events_data and isinstance(events_data["data"], dict):
+                # API response structure: data.data.events
+                events_list = events_data["data"].get("events", [])
+            elif "data" in events_data:
                 events_list = events_data["data"]
             else:
                 events_list = events_data
-            
+
+            # Ensure it's a list
+            if isinstance(events_list, dict):
+                events_list = list(events_list.values())
+            elif not isinstance(events_list, list):
+                events_list = []
+
             count = len(events_list)
-            
+
             # Check minimum threshold
             passed = count >= self.min_events
-            
-            # Check for essential fields
+
+            # Check for essential fields using random sampling
+            sample_size = min(self.EVENTS_SAMPLE_SIZE, count)
+            events_sample = random.sample(events_list, sample_size) if count > 0 else []
+
             has_minute = 0
             has_type = 0
             has_player = 0
-            
-            for event in events_list[:50]:  # Sample first 50
+
+            for event in events_sample:
                 if event.get("minute") is not None:
                     has_minute += 1
                 if event.get("type"):
                     has_type += 1
                 if event.get("player"):
                     has_player += 1
-            
-            sample_size = min(50, count)
             
             result = {
                 "passed": passed,
@@ -330,13 +367,22 @@ class DataQualityValidator:
         
         try:
             lineups_data = load_json_file(lineups_file)
-            
-            # Extract lineups
-            if "data" in lineups_data:
+
+            # Extract lineups - handle nested structure
+            if "data" in lineups_data and isinstance(lineups_data["data"], dict):
+                # API response structure: data.data.lineups
+                lineups_list = lineups_data["data"].get("lineups", [])
+            elif "data" in lineups_data:
                 lineups_list = lineups_data["data"]
             else:
                 lineups_list = lineups_data
-            
+
+            # Ensure it's a list
+            if isinstance(lineups_list, dict):
+                lineups_list = list(lineups_list.values())
+            elif not isinstance(lineups_list, list):
+                lineups_list = []
+
             count = len(lineups_list)
             
             # Check minimum threshold
@@ -501,9 +547,9 @@ class DataQualityValidator:
         """
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
-        
-        results_df.to_csv(output_file, index=False)
-        
+
+        results_df.to_csv(output_file, index=False, encoding='utf-8')
+
         self.logger.info(f"✅ Validation report saved to: {output_file}")
-        
+
         return output_file

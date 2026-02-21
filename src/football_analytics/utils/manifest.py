@@ -37,6 +37,10 @@ class CollectionManifest:
         >>> print(f"Progress: {progress['fixtures_pct']}")
     """
     
+    # Constants
+    MIN_FIXTURE_ID = 1
+    ESTIMATED_SECONDS_PER_API_CALL = 6  # 6 seconds per API call
+    
     # Default includes in priority order
     DEFAULT_INCLUDES = [
         "ballCoordinates",  # Highest priority - core tracking data
@@ -54,8 +58,22 @@ class CollectionManifest:
         includes: Optional[list[str]] = None
     ):
         """Initialize collection manifest."""
+        # Input validation
+        if not isinstance(manifest_path, str) or not manifest_path.strip():
+            raise ValueError(f"Invalid manifest_path: {manifest_path}")
+        
+        if includes is not None:
+            if not isinstance(includes, list):
+                raise ValueError(f"includes must be a list, got {type(includes)}")
+            if not all(isinstance(inc, str) for inc in includes):
+                raise ValueError("All includes must be strings")
+        
         self.manifest_path = Path(manifest_path)
-        self.manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        try:
+            self.manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        except (IOError, OSError) as e:
+            raise ValueError(f"Failed to create manifest directory: {e}")
         
         self.includes = includes or self.DEFAULT_INCLUDES
         self.manifest = self.load_manifest()
@@ -69,12 +87,16 @@ class CollectionManifest:
             Manifest dictionary
         """
         if self.manifest_path.exists():
-            with open(self.manifest_path) as f:
-                manifest = json.load(f)
-                # Validate structure
-                if "fixtures" not in manifest:
-                    manifest["fixtures"] = {}
-                return manifest
+            try:
+                with open(self.manifest_path, encoding='utf-8') as f:
+                    manifest = json.load(f)
+                    # Validate structure
+                    if "fixtures" not in manifest:
+                        manifest["fixtures"] = {}
+                    return manifest
+            except (IOError, OSError, json.JSONDecodeError) as e:
+                self.logger.warning(f"Failed to load manifest, creating new one: {e}")
+                # Fall through to create new manifest
         
         # Create new manifest
         return {
@@ -89,10 +111,14 @@ class CollectionManifest:
         """Save manifest to disk."""
         self.manifest["last_updated"] = datetime.now().isoformat()
         
-        with open(self.manifest_path, 'w') as f:
-            json.dump(self.manifest, f, indent=2)
-        
-        self.logger.debug(f"Manifest saved to {self.manifest_path}")
+        try:
+            with open(self.manifest_path, 'w', encoding='utf-8') as f:
+                json.dump(self.manifest, f, indent=2)
+            
+            self.logger.debug(f"Manifest saved to {self.manifest_path}")
+        except (IOError, OSError) as e:
+            self.logger.error(f"Failed to save manifest: {e}")
+            raise
     
     def register_fixture(self, fixture_id: int) -> None:
         """
@@ -105,6 +131,10 @@ class CollectionManifest:
             >>> manifest = CollectionManifest()
             >>> manifest.register_fixture(18841624)
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(f"Invalid fixture_id: {fixture_id}")
+        
         fixture_id_str = str(fixture_id)
         
         if fixture_id_str not in self.manifest["fixtures"]:
@@ -132,6 +162,16 @@ class CollectionManifest:
             >>> manifest.mark_complete(18841624, "ballCoordinates")
             >>> manifest.mark_complete(18841624, "events")
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(f"Invalid fixture_id: {fixture_id}")
+        
+        if not isinstance(include_name, str) or not include_name.strip():
+            raise ValueError(f"Invalid include_name: {include_name}")
+        
+        if include_name not in self.DEFAULT_INCLUDES:
+            self.logger.warning(f"Unknown include_name: {include_name}")
+        
         fixture_id_str = str(fixture_id)
         
         # Register if not exists
@@ -174,6 +214,16 @@ class CollectionManifest:
             >>> manifest = CollectionManifest()
             >>> manifest.mark_error(18841624, "ballCoordinates", "API timeout")
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(f"Invalid fixture_id: {fixture_id}")
+        
+        if not isinstance(include_name, str) or not include_name.strip():
+            raise ValueError(f"Invalid include_name: {include_name}")
+        
+        if not isinstance(error_msg, str):
+            raise ValueError(f"Invalid error_msg: {error_msg}")
+        
         fixture_id_str = str(fixture_id)
         
         if fixture_id_str not in self.manifest["fixtures"]:
@@ -214,8 +264,12 @@ class CollectionManifest:
         for include in self.manifest["priority_order"]:
             for fixture_id_str, fixture_data in self.manifest["fixtures"].items():
                 if include in fixture_data["includes_remaining"]:
-                    fixture_id = int(fixture_id_str)
-                    pending.append((fixture_id, include))
+                    try:
+                        fixture_id = int(fixture_id_str)
+                        pending.append((fixture_id, include))
+                    except (ValueError, TypeError) as e:
+                        self.logger.warning(f"Invalid fixture_id in manifest: {fixture_id_str}: {e}")
+                        continue
         
         return pending
     
@@ -258,9 +312,9 @@ class CollectionManifest:
         fixtures_pct = (complete_fixtures / total_fixtures * 100) if total_fixtures > 0 else 0
         includes_pct = (complete_includes / total_includes * 100) if total_includes > 0 else 0
         
-        # Estimate time remaining (assuming 6 seconds per API call)
+        # Estimate time remaining
         remaining_includes = total_includes - complete_includes
-        estimated_seconds = remaining_includes * 6
+        estimated_seconds = remaining_includes * self.ESTIMATED_SECONDS_PER_API_CALL
         estimated_minutes = estimated_seconds / 60
         
         if estimated_minutes < 60:
@@ -292,6 +346,10 @@ class CollectionManifest:
             >>> print(f"Status: {status['status']}")
             >>> print(f"Completed: {status['includes_completed']}")
         """
+        # Input validation
+        if not isinstance(fixture_id, int) or fixture_id < self.MIN_FIXTURE_ID:
+            raise ValueError(f"Invalid fixture_id: {fixture_id}")
+        
         fixture_id_str = str(fixture_id)
         return self.manifest["fixtures"].get(fixture_id_str)
     
@@ -310,11 +368,21 @@ class CollectionManifest:
             >>> complete = manifest.get_fixtures_by_status("complete")
             >>> print(f"Complete fixtures: {len(complete)}")
         """
-        return [
-            int(fixture_id)
-            for fixture_id, data in self.manifest["fixtures"].items()
-            if data["status"] == status
-        ]
+        # Input validation
+        valid_statuses = ["pending", "in_progress", "complete"]
+        if not isinstance(status, str) or status not in valid_statuses:
+            raise ValueError(f"Invalid status: {status}. Must be one of {valid_statuses}")
+        
+        result = []
+        for fixture_id, data in self.manifest["fixtures"].items():
+            if data["status"] == status:
+                try:
+                    result.append(int(fixture_id))
+                except (ValueError, TypeError) as e:
+                    self.logger.warning(f"Invalid fixture_id in manifest: {fixture_id}: {e}")
+                    continue
+        
+        return result
     
     def reset(self) -> None:
         """

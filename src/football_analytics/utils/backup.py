@@ -42,6 +42,9 @@ class BackupManager:
         >>> backup.create_checkpoint("after_collection")
     """
     
+    # Constants
+    MAX_CHECKPOINT_NAME_LENGTH = 100
+    
     def __init__(
         self,
         primary_dir: str = "data/raw",
@@ -49,6 +52,16 @@ class BackupManager:
         external_dir: Optional[str] = None
     ):
         """Initialize backup manager."""
+        # Input validation
+        if not isinstance(primary_dir, str) or not primary_dir.strip():
+            raise ValueError(f"Invalid primary_dir: {primary_dir}")
+        
+        if not isinstance(backup_dir, str) or not backup_dir.strip():
+            raise ValueError(f"Invalid backup_dir: {backup_dir}")
+        
+        if external_dir is not None and (not isinstance(external_dir, str) or not external_dir.strip()):
+            raise ValueError(f"Invalid external_dir: {external_dir}")
+        
         self.primary = Path(primary_dir)
         self.local_backup = Path(backup_dir)
         
@@ -61,14 +74,55 @@ class BackupManager:
             self.external_backup = home / "football-analytics-backup"
         
         # Create all directories
-        for path in [self.primary, self.local_backup, self.external_backup]:
-            path.mkdir(parents=True, exist_ok=True)
+        try:
+            for path in [self.primary, self.local_backup, self.external_backup]:
+                path.mkdir(parents=True, exist_ok=True)
+        except (IOError, OSError) as e:
+            raise ValueError(f"Failed to create directories: {e}")
         
         self.logger = get_logger(self.__class__.__name__)
         self.logger.info(f"Backup manager initialized:")
         self.logger.info(f"  Primary: {self.primary}")
         self.logger.info(f"  Local backup: {self.local_backup}")
         self.logger.info(f"  External backup: {self.external_backup}")
+    
+    def _sanitize_filepath(self, filepath: str) -> Path:
+        """
+        Sanitize and validate filepath to prevent directory traversal.
+        
+        Args:
+            filepath: Relative filepath to sanitize
+        
+        Returns:
+            Sanitized Path object
+        
+        Raises:
+            ValueError: If filepath is invalid or contains path traversal
+        """
+        if not isinstance(filepath, str) or not filepath.strip():
+            raise ValueError(f"Invalid filepath: {filepath}")
+        
+        # Convert to Path and resolve
+        path = Path(filepath)
+        
+        # Check for absolute paths
+        if path.is_absolute():
+            raise ValueError(f"Absolute paths not allowed: {filepath}")
+        
+        # Check for path traversal attempts
+        if '..' in path.parts:
+            raise ValueError(f"Path traversal detected: {filepath}")
+        
+        # Resolve against primary to check final path
+        resolved = (self.primary / path).resolve()
+        
+        # Ensure resolved path is within primary directory
+        try:
+            resolved.relative_to(self.primary.resolve())
+        except ValueError:
+            raise ValueError(f"Path escapes primary directory: {filepath}")
+        
+        return path
     
     def save_with_backup(self, data: Any, filepath: str) -> Path:
         """
@@ -86,23 +140,32 @@ class BackupManager:
             >>> data = {"fixture_id": 123, "events": [...]}
             >>> backup.save_with_backup(data, "fixtures/2023/match_123.json")
         """
+        # Sanitize filepath to prevent path traversal
+        sanitized_path = self._sanitize_filepath(filepath)
+        
         # Save to primary
-        primary_path = self.primary / filepath
-        primary_path.parent.mkdir(parents=True, exist_ok=True)
+        primary_path = self.primary / sanitized_path
         
-        with open(primary_path, 'w') as f:
-            json.dump(data, f, indent=2)
+        try:
+            primary_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(primary_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2)
+            
+            self.logger.debug(f"Saved to primary: {primary_path}")
+            
+            # Immediate backup to local
+            backup_path = self.local_backup / sanitized_path
+            backup_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(primary_path, backup_path)
+            
+            self.logger.debug(f"Backed up to: {backup_path}")
+            
+            return primary_path
         
-        self.logger.debug(f"Saved to primary: {primary_path}")
-        
-        # Immediate backup to local
-        backup_path = self.local_backup / filepath
-        backup_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(primary_path, backup_path)
-        
-        self.logger.debug(f"Backed up to: {backup_path}")
-        
-        return primary_path
+        except (IOError, OSError, TypeError) as e:
+            self.logger.error(f"Failed to save with backup {filepath}: {e}")
+            raise
     
     def create_checkpoint(self, checkpoint_name: str) -> Path:
         """
@@ -123,6 +186,20 @@ class BackupManager:
             Checkpoint created: after_phase1_20260216_143022.tar.gz
             Size: 125.3 MB
         """
+        # Input validation
+        if not isinstance(checkpoint_name, str) or not checkpoint_name.strip():
+            raise ValueError(f"Invalid checkpoint_name: {checkpoint_name}")
+        
+        # Sanitize checkpoint name
+        checkpoint_name = checkpoint_name.strip()
+        if len(checkpoint_name) > self.MAX_CHECKPOINT_NAME_LENGTH:
+            raise ValueError(f"checkpoint_name too long (max {self.MAX_CHECKPOINT_NAME_LENGTH} chars)")
+        
+        # Check for invalid characters that could cause issues
+        invalid_chars = ['/', '\\', '..', '\0']
+        if any(char in checkpoint_name for char in invalid_chars):
+            raise ValueError(f"checkpoint_name contains invalid characters: {checkpoint_name}")
+        
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         checkpoint_file = f"{checkpoint_name}_{timestamp}.tar.gz"
         
@@ -159,10 +236,39 @@ class BackupManager:
             >>> backup = BackupManager()
             >>> backup.restore_from_checkpoint(Path("backup/checkpoint_20260216.tar.gz"))
         """
+        # Input validation
+        if not isinstance(checkpoint_path, (str, Path)):
+            raise ValueError(f"checkpoint_path must be str or Path, got {type(checkpoint_path)}")
+        
+        checkpoint_path = Path(checkpoint_path)
+        
+        if not checkpoint_path.exists():
+            raise ValueError(f"Checkpoint file does not exist: {checkpoint_path}")
+        
+        if not checkpoint_path.is_file():
+            raise ValueError(f"Checkpoint path is not a file: {checkpoint_path}")
+        
+        if not checkpoint_path.suffix == '.gz':
+            raise ValueError(f"Invalid checkpoint file format (must be .tar.gz): {checkpoint_path}")
+        
         self.logger.info(f"Restoring from checkpoint: {checkpoint_path}")
         
         try:
             with tarfile.open(checkpoint_path, "r:gz") as tar:
+                # Validate all members before extraction (security check)
+                for member in tar.getmembers():
+                    # Check for absolute paths
+                    if member.name.startswith('/'):
+                        raise ValueError(f"Unsafe tar member (absolute path): {member.name}")
+                    
+                    # Check for path traversal
+                    if '..' in member.name:
+                        raise ValueError(f"Unsafe tar member (path traversal): {member.name}")
+                    
+                    # Check for links (symlinks can be used for attacks)
+                    if member.issym() or member.islnk():
+                        raise ValueError(f"Unsafe tar member (link): {member.name}")
+                
                 # Extract to parent directory
                 extract_path = self.primary.parent
                 tar.extractall(extract_path)
@@ -217,8 +323,15 @@ class BackupManager:
             >>> if backup.verify_backup_integrity("fixtures/2023/match_123.json"):
             ...     print("Backup is valid")
         """
-        primary_path = self.primary / filepath
-        backup_path = self.local_backup / filepath
+        # Sanitize filepath
+        try:
+            sanitized_path = self._sanitize_filepath(filepath)
+        except ValueError as e:
+            self.logger.warning(f"Invalid filepath: {e}")
+            return False
+        
+        primary_path = self.primary / sanitized_path
+        backup_path = self.local_backup / sanitized_path
         
         # Check both files exist
         if not primary_path.exists():
@@ -230,12 +343,16 @@ class BackupManager:
             return False
         
         # Compare file sizes (quick check)
-        primary_size = primary_path.stat().st_size
-        backup_size = backup_path.stat().st_size
-        
-        if primary_size != backup_size:
-            self.logger.warning(f"Size mismatch for {filepath}: "
-                              f"primary={primary_size}, backup={backup_size}")
+        try:
+            primary_size = primary_path.stat().st_size
+            backup_size = backup_path.stat().st_size
+            
+            if primary_size != backup_size:
+                self.logger.warning(f"Size mismatch for {filepath}: "
+                                  f"primary={primary_size}, backup={backup_size}")
+                return False
+        except (IOError, OSError) as e:
+            self.logger.warning(f"Failed to check file sizes for {filepath}: {e}")
             return False
         
         return True

@@ -11,6 +11,12 @@ python = "^3.11"
 requests = "^2.31.0"
 pandas = "^2.2.0"
 python-dotenv = "^1.0.0"
+scipy = "^1.13"
+matplotlib = "^3.9"
+seaborn = "^0.13"
+numpy = "^1.26"
+jupyter = "^1.0"
+ipykernel = "^6.29"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

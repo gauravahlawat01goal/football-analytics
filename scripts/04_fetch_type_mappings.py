@@ -51,13 +51,13 @@ def fetch_type_mappings() -> pd.DataFrame:
     seen: dict[int, dict] = {}
 
     for fixture_id in SAMPLE_FIXTURE_IDS:
-        url = f"https://api.sportmonks.com/v3/football/fixtures/{fixture_id}"
-        response = client.session.get(url, params={"include": "statistics.type"})
-        if not response.ok:
-            logger.warning(f"  Fixture {fixture_id}: HTTP {response.status_code}")
+        try:
+            response = client.get_fixture_details(fixture_id, include="statistics.type")
+        except Exception as e:
+            logger.warning(f"  Fixture {fixture_id}: {e}")
             continue
 
-        stats = response.json().get("data", {}).get("statistics", [])
+        stats = response.get("data", {}).get("statistics", [])
         for entry in stats:
             t = entry.get("type")
             if t and t.get("id") not in seen:

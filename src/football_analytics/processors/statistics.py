@@ -29,7 +29,7 @@ class StatisticsProcessor:
         ['fixture_id', 'type_id', 'participant_id', 'location', 'value']
     """
 
-    def __init__(self, data_dir: str = "data/backup"):
+    def __init__(self, data_dir: str = "data/raw"):
         self.data_dir = Path(data_dir)
         self.logger = get_logger(self.__class__.__name__)
 
@@ -71,7 +71,7 @@ class StatisticsProcessor:
                 "type_id": entry.get("type_id"),
                 "participant_id": entry.get("participant_id"),
                 "location": entry.get("location"),
-                "value": entry.get("data", {}).get("value"),
+                "value": (entry.get("data") or {}).get("value"),
             })
 
         df = pd.DataFrame(rows)

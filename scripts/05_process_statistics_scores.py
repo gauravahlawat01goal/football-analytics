@@ -25,12 +25,14 @@ setup_logging()
 logger = get_logger(__name__)
 
 
-def process_fixture(fixture_id: int, data_dir: Path, output_dir: Path) -> dict:
+def process_fixture(
+    fixture_id: int,
+    stats_processor: StatisticsProcessor,
+    scores_processor: ScoresProcessor,
+    output_dir: Path,
+) -> dict:
     """Process statistics and scores for a single fixture."""
     result = {"fixture_id": fixture_id, "statistics": False, "scores": False}
-
-    stats_processor = StatisticsProcessor(data_dir=str(data_dir))
-    scores_processor = ScoresProcessor(data_dir=str(data_dir))
 
     # Statistics
     stats_df = stats_processor.parse_statistics(fixture_id)
@@ -84,11 +86,15 @@ def main():
         fixture_ids = sorted(int(d.name) for d in fixture_dirs)
         logger.info(f"Found {len(fixture_ids)} fixtures in {data_dir}")
 
+    # Create processors once — they are stateless and can be reused across fixtures
+    stats_processor = StatisticsProcessor(data_dir=str(data_dir))
+    scores_processor = ScoresProcessor(data_dir=str(data_dir))
+
     stats_ok = scores_ok = stats_fail = scores_fail = 0
 
     for i, fixture_id in enumerate(fixture_ids, 1):
         logger.info(f"[{i}/{len(fixture_ids)}] Fixture {fixture_id}")
-        result = process_fixture(fixture_id, data_dir, output_dir)
+        result = process_fixture(fixture_id, stats_processor, scores_processor, output_dir)
 
         if result["statistics"]:
             stats_ok += 1

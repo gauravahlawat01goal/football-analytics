@@ -38,7 +38,7 @@ class ScoresProcessor:
         # CURRENT      away         0
     """
 
-    def __init__(self, data_dir: str = "data/backup"):
+    def __init__(self, data_dir: str = "data/raw"):
         self.data_dir = Path(data_dir)
         self.logger = get_logger(self.__class__.__name__)
 
@@ -75,7 +75,7 @@ class ScoresProcessor:
 
         rows = []
         for entry in scores_list:
-            score = entry.get("score", {})
+            score = entry.get("score") or {}
             rows.append({
                 "fixture_id": fixture_id,
                 "type_id": entry.get("type_id"),

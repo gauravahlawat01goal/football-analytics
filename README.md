@@ -8,16 +8,16 @@ Data-driven analysis of Liverpool FC's tactical evolution across three seasons �
 
 ## Project Status
 
-**~70% complete** — pipeline done, Deep Dive 3.1 complete, analysis notebooks in progress.
+**~75% complete** — pipeline done, Deep Dives 3.1 and 1.4 complete, analysis notebooks in progress.
 
 | Phase | Status |
 |-------|--------|
 | Data collection (114 fixtures, 7 includes each) | ✅ Complete |
 | Data processing pipeline | ✅ Complete |
 | Deep Dive 3.1: Full statistical comparison + ball zone presence | ✅ Complete |
-| Deep Dive 1.4: Game-state tactical shifts | 🔄 Next |
+| Deep Dive 1.4: Game-state tactical shifts | ✅ Complete |
 | Deep Dive 1.2: Pressing trigger analysis | 🔄 Next |
-| Remaining 18 deep-dive analyses | ⏳ Planned |
+| Remaining 17 deep-dive analyses | ⏳ Planned |
 | X/Twitter thread series | ⏳ Not started |
 
 See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full phase breakdown and [`docs/status/DEEP_DIVE_PLAN.md`](docs/status/DEEP_DIVE_PLAN.md) for all 21 planned analyses.
@@ -26,11 +26,12 @@ See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full ph
 
 ## Key Findings So Far
 
-- Results **regressed** under Slot: 2.12 → 1.68 PPG
+- Results **regressed** in Y2: 2.14 (Klopp) → 2.12 (Y1) → 1.63 PPG (Y2)
 - Formation shifted: 4-3-3 → 4-2-3-1
 - Right-side attacking collapsed after Trent's transfer to Real Madrid (R-to-L ratio: 1.47 → 0.90)
 - **Confirmed** (Bonferroni-corrected, Klopp vs Slot Y2): Ball Safe −13.5% (d=1.11), Shots On Target −37.2% (d=0.88), Goal Attempts −29.3% (d=0.87), Tackles −25.7% (d=0.86)
 - **Directional signals** (Y1 → Y2, nominally significant): Big Chances Created −32.6%, Shots On Target −28.0%, Successful Headers +45.5%
+- **Game-state**: Y2 leads in only 63% of games (vs 82% Y1). Y2 scores 0.73 go-ahead goals/match from level — down 25% vs Y1/Klopp (0.97). The regression is a deadlock problem, not a lead-management problem.
 
 ---
 
@@ -39,7 +40,8 @@ See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full ph
 ```
 football-analytics/
 ├── notebooks/                          # Analysis notebooks
-│   └── 01_statistical_comparison.ipynb # Deep Dive 3.1 — 44-metric comparison + zone presence
+│   ├── 01_statistical_comparison.ipynb # Deep Dive 3.1 — 44-metric comparison + zone presence
+│   └── 02_game_state_tactics.ipynb     # Deep Dive 1.4 — game-state reconstruction + lead management
 ├── scripts/
 │   ├── 01_collect_fixtures*.py         # Fixture collection (date search / team endpoint)
 │   ├── 02_collect_match_data.py        # Fetch all includes per fixture (7 API calls each)
@@ -144,7 +146,7 @@ poetry run pytest
 | Notebook | Status | Description |
 |----------|--------|-------------|
 | `01_statistical_comparison.ipynb` | ✅ Done | 44-metric Welch's t-test comparison across seasons. Confirmatory (Klopp vs Slot) + exploratory (Y1 vs Y2) with separate Bonferroni correction. Ball zone presence analysis. |
-| `02_game_state_tactics.ipynb` | 🔄 Next | Game-state reconstruction from goal events. Ball coordinate + event segmentation by WIN/DRAW/LOSS. |
+| `02_game_state_tactics.ipynb` | ✅ Done | Game-state reconstruction (WIN/DRAW/LOSS) from goal events. Lead management, goals by game state, pitch heatmaps by state. Key finding: Y2's regression is a deadlock problem — 25% fewer go-ahead goals per match from level. |
 | `03_pressing_analysis.ipynb` | 🔄 Next | Defensive event mapping to pitch zones. Pressing intensity and pressing line height by 15-min intervals. |
 | `04_wirtz_integration.ipynb` | ⏳ Planned | With/without Wirtz starting — final third patterns, key passes, big chances created. |
 

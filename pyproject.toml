@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "Football data analysis for European leagues using SportsMonk API"
 authors = ["Gaurav Ahlawat"]
 readme = "README.md"
-packages = [{include = "football_analytics", from = "src"}]
+packages = [
+    {include = "football_analytics", from = "src"},
+    {include = "liverpool_strategy", from = "src"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"

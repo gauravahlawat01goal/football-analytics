@@ -15,10 +15,20 @@ def get_lfc_is_home(fixture_id: int, fixtures_dir: Path, liverpool_id: int) -> b
     if not sc_path.exists():
         return None
     sc = pd.read_csv(sc_path)
-    lfc_row = sc[sc["participant_id"] == liverpool_id]
-    if lfc_row.empty:
+    lfc_rows = sc[sc["participant_id"] == liverpool_id]
+    if lfc_rows.empty:
         return None
-    return lfc_row.iloc[0]["participant"] == "home"
+
+    if "description" in lfc_rows.columns:
+        current_rows = lfc_rows[lfc_rows["description"] == "CURRENT"]
+        if not current_rows.empty:
+            lfc_rows = current_rows
+
+    participant_series = lfc_rows["participant"].dropna()
+    if participant_series.empty:
+        return None
+
+    return participant_series.iloc[0] == "home"
 
 
 def reconstruct_game_states(
@@ -82,5 +92,11 @@ def get_state_at_minute(intervals: list[tuple[int, int, int, str]], minute: int)
 
 
 def final_score(intervals: list[tuple[int, int, int, str]]) -> tuple[int, int]:
-    """Return (lfc_goals, opp_goals) from the last interval."""
+    """Return (lfc_goals, opp_goals) from the last interval.
+
+    Raises:
+        ValueError: If ``intervals`` is empty.
+    """
+    if not intervals:
+        raise ValueError("intervals must be a non-empty list of game state intervals")
     return intervals[-1][1], intervals[-1][2]

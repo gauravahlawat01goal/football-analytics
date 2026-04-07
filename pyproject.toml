@@ -6,7 +6,8 @@ authors = ["Gaurav Ahlawat"]
 readme = "README.md"
 packages = [
     {include = "football_analytics", from = "src"},
-    {include = "liverpool_strategy", from = "src"}
+    {include = "liverpool_strategy", from = "src"},
+    {include = "bot", from = "src"}
 ]
 
 [tool.poetry.dependencies]
@@ -14,6 +15,8 @@ python = "^3.11"
 requests = "^2.31.0"
 pandas = "^2.2.0"
 python-dotenv = "^1.0.0"
+mplsoccer = "^1.6.1"
+tweepy = "^4.16.0"
 
 [tool.poetry.group.analysis.dependencies]
 scipy = "^1.13"
@@ -22,6 +25,10 @@ seaborn = "^0.13"
 numpy = "^1.26"
 jupyter = "^1.0"
 ipykernel = "^6.29"
+# Tier 2 (xG enrichment): installed via pip due to certifi pin conflicts
+# understatapi = "^0.7.1"
+# Tier 3 (tactical metrics): installed via pip due to certifi constraints
+# soccerdata = "^1.8.8"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

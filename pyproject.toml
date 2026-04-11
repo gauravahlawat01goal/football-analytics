@@ -22,6 +22,17 @@ seaborn = "^0.13"
 numpy = "^1.26"
 jupyter = "^1.0"
 ipykernel = "^6.29"
+mplsoccer = "^1.6.1"
+# Tier 2 (xG enrichment): installed via pip due to certifi pin conflicts
+# understatapi = "^0.7.1"
+# Tier 3 (tactical metrics): installed via pip due to certifi constraints
+# soccerdata = "^1.8.8"
+
+[tool.poetry.group.bot]
+optional = true
+
+[tool.poetry.group.bot.dependencies]
+tweepy = "^4.16.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

@@ -127,7 +127,7 @@ def fetch_shots(
                     "y": float(s["Y"]),  # 0–1 scale
                     "xg": float(s["xG"]),
                     "result": s["result"],  # Goal, SavedShot, MissedShots, BlockedShot
-                    "situation": s["situation"],  # OpenPlay, SetPiece, Corner, Penalty, DirectFreekick
+                    "situation": s["situation"],  # OpenPlay, SetPiece, FromCorner, Penalty, DirectFreekick
                     "shot_type": s["shotType"],  # LeftFoot, RightFoot, Head
                     "last_action": s.get("lastAction", ""),
                     "player_assisted": s.get("player_assisted", ""),

@@ -6,7 +6,7 @@ PPDA (Passes Allowed Per Defensive Action) measures pressing intensity:
     typical range: 6–14 for PL teams
 
 Outputs:
-    data/processed/fbref/team_match_stats.csv   — misc + passing stats per match
+    data/processed/fbref/team_match_stats.csv   — misc stats per match
     data/processed/fbref/ppda.csv               — PPDA per match (simplified)
 
 Usage:
@@ -50,10 +50,6 @@ LIVERPOOL_FBREF_NAME = "Liverpool"
 LEAGUE = "ENG-Premier League"
 PROCESSED_DIR = Path("data/processed")
 OUT_DIR = PROCESSED_DIR / "fbref"
-
-# PPDA-related columns in FBRef misc stats
-# FBRef PPDA is labelled 'ppda' and 'ppda_att' (defensive and attacking halves)
-PPDA_COLS = ["ppda", "ppda_att"]
 
 
 def fetch_season_stats(season_label: str, soccerdata_season: str) -> pd.DataFrame | None:
@@ -141,15 +137,20 @@ def main() -> None:
         log.info("Saved %d rows to %s", len(all_stats), stats_path)
 
     # Extract just the PPDA view
-    ppda_cols = [c for c in all_stats.columns if "ppda" in c.lower() or c in ("season", "manager", "date")]
+    actual_ppda_cols = [c for c in all_stats.columns if "ppda" in c.lower()]
+    if not actual_ppda_cols:
+        log.warning("No PPDA columns found in fetched data. Available: %s", list(all_stats.columns)[:30])
+        return
+    meta_cols = [c for c in ("season", "manager", "date") if c in all_stats.columns]
+    ppda_cols = meta_cols + actual_ppda_cols
     if ppda_cols:
-        ppda_df = all_stats[ppda_cols].dropna(subset=[c for c in ppda_cols if "ppda" in c.lower()])
+        ppda_df = all_stats[ppda_cols].dropna(subset=actual_ppda_cols)
         ppda_df.to_csv(ppda_path, index=False)
         log.info("Saved PPDA data (%d rows) to %s", len(ppda_df), ppda_path)
 
         for season_label in SEASONS:
             season_ppda = ppda_df[ppda_df["season"] == season_label]
-            ppda_col = next((c for c in ppda_cols if "ppda" in c.lower() and "att" not in c.lower()), None)
+            ppda_col = next((c for c in actual_ppda_cols if "att" not in c.lower()), None)
             if ppda_col and not season_ppda.empty:
                 log.info("  %s PPDA: mean=%.2f, min=%.2f, max=%.2f",
                          season_label,

@@ -7,9 +7,12 @@ Import in any notebook with:
         cohens_d, effect_label, mw_test,
         SEASON_COLORS, SEASON_LABELS, SEASON_ORDER,
         CONFIRMATORY_LABEL, EXPLORATORY_LABEL,
-        setup_plot_style, get_data_dirs,
+        setup_plot_style, get_data_dirs, season_tick_labels,
     )
-    DATA_DIR, META_DIR, FIXTURES_DIR = get_data_dirs()
+    dirs = get_data_dirs()
+    DATA_DIR    = dirs.data
+    META_DIR    = dirs.meta
+    FIXTURES_DIR = dirs.fixtures
     setup_plot_style()
 
 All notebooks (03–06+) should use these instead of redefining locally.
@@ -55,11 +58,14 @@ def cohens_d(a, b) -> float:
     """Cohen's d effect size using pooled standard deviation.
 
     Positive value means group *a* > group *b*.
-    Returns 0.0 when both groups have zero variance.
+    Returns 0.0 when either group has fewer than 2 observations or when
+    the pooled standard deviation is zero or non-finite.
     """
     a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
+    if len(a) < 2 or len(b) < 2:
+        return 0.0
     pooled_sd = np.sqrt((np.std(a, ddof=1) ** 2 + np.std(b, ddof=1) ** 2) / 2)
-    if pooled_sd == 0:
+    if not np.isfinite(pooled_sd) or pooled_sd == 0:
         return 0.0
     return float((np.mean(a) - np.mean(b)) / pooled_sd)
 
@@ -85,11 +91,14 @@ def mw_test(a, b) -> tuple[float, float, float]:
     and d is Cohen's d (positive = a > b).
 
     Returns (nan, nan, d) when either group has fewer than 3 observations.
+    Cohen's d is computed only after the length check so tiny samples
+    do not propagate NaN through cohens_d.
     """
     a, b = np.asarray(a, dtype=float), np.asarray(b, dtype=float)
-    d = cohens_d(a, b)
     if len(a) < 3 or len(b) < 3:
+        d = cohens_d(a, b)  # cohens_d is safe for n>=0 after its own guard
         return float("nan"), float("nan"), d
+    d = cohens_d(a, b)
     U, p = stats.mannwhitneyu(a, b, alternative="two-sided")
     return float(U), float(p), d
 

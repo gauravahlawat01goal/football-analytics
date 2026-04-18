@@ -1,7 +1,7 @@
 title: "Liverpool FC: Three Seasons of Data"
 description: "Statistical analysis of Liverpool's tactical evolution across Klopp 2023–24 and Arne Slot 2024–25, 2025–26."
 author: "Gaurav Ahlawat"
-baseurl: "/football-analytics"
+baseurl: "/football-analytics"   # overridden to "" by Netlify env
 url: "https://gauravahlawat01goal.github.io"
 twitter_username: gauravahlawat01goal
 github_username: gauravahlawat01goal

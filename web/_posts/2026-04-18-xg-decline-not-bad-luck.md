@@ -60,7 +60,7 @@ Y2 broke both at once: volume declined further (15.5 shots/match), and quality p
 | Slot Y1 2024–25 | 0.487 | — |
 | Slot Y2 2025–26 | 0.339 | — |
 
-Set-piece xG halved from the Klopp era to Y2. The decline started under Slot Y1 (−28%) while Trent Alexander-Arnold was still at the club, and continued after his departure (−30% Y1→Y2). The full picture is addressed in [Thread 2: The Trent Effect, Part 1](#).
+Set-piece xG halved from the Klopp era to Y2. The decline started under Slot Y1 (−28%) while Trent Alexander-Arnold was still at the club, and continued after his departure (−30% Y1→Y2). The full picture is addressed in Thread 2: The Trent Effect, Part 1 (coming soon).
 
 ## What you've been feeling is real
 

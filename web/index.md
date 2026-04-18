@@ -146,7 +146,8 @@ description: "Data-driven tactical analysis of Liverpool FC across three seasons
   <section>
     <h2>Thread Series</h2>
     <div class="thread-list">
-      {% for post in site.posts %}
+      {% assign sorted_posts = site.posts | sort: 'thread_num' %}
+      {% for post in sorted_posts %}
       <div class="thread-item {{ post.status }}">
         <div class="thread-num">{{ post.thread_num | prepend: '0' | slice: -2, 2 }}</div>
         <div class="thread-content">

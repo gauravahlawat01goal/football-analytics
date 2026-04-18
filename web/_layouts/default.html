@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include head.html %}
+</head>
+<body>
+  {{ content }}
+  <footer>
+    <div class="footer-links">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="https://github.com/{{ site.github_username }}/football-analytics" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener">X / Twitter</a>
+    </div>
+    <p>Analysis by {{ site.author }} · Data: SportsMonks, Understat, FBRef</p>
+  </footer>
+</body>
+</html>

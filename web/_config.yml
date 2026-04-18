@@ -10,3 +10,4 @@ github_username: gauravahlawat01goal
 markdown: kramdown
 permalink: /analysis/:year/:month/:day/:title/
 exclude: ["node_modules", "Gemfile", "Gemfile.lock"]
+

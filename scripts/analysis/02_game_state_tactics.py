@@ -10,6 +10,11 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import warnings
 
+from liverpool_strategy.analysis.game_state import (
+    get_lfc_is_home, reconstruct_game_states, final_score
+)
+from liverpool_strategy.analysis.notebook_helpers import mw_test
+
 warnings.filterwarnings('ignore')
 
 PROCESSED_DIR = Path("data/processed")
@@ -26,14 +31,9 @@ SEASON_COLORS = {21646: "#c8102e", 23614: "#f6eb61", 25583: "#00b2a9"}
 STATE_COLORS = {"WIN": "#2E7D32", "DRAW": "#F57C00", "LOSS": "#C62828"}
 STATE_ORDER = ["WIN", "DRAW", "LOSS"]
 
-from liverpool_strategy.analysis.game_state import (
-    get_lfc_is_home, reconstruct_game_states, get_state_at_minute, final_score
-)
-from liverpool_strategy.analysis.notebook_helpers import cohens_d, effect_label, mw_test
-
 # ── Load fixture metadata ─────────────────────────────────────────────────────
 fixture_map = pd.read_csv(METADATA_DIR / "fixture_season_mapping.csv")
-processed = fixture_map[fixture_map["has_processed_data"] == True].copy()
+processed = fixture_map[fixture_map["has_processed_data"].eq(True)].copy()
 
 processed["lfc_is_home"] = processed["fixture_id"].apply(
     lambda fid: get_lfc_is_home(fid, FIXTURES_DIR, LIVERPOOL_ID)
@@ -45,7 +45,7 @@ season_counts = processed.groupby("season_id")["fixture_id"].count()
 print(f"Fixtures with processed data: {len(processed)}")
 for sid in SEASON_IDS:
     n = season_counts.get(sid, 0)
-    home = processed[(processed["season_id"] == sid) & (processed["lfc_is_home"] == True)].shape[0]
+    home = processed[(processed["season_id"] == sid) & processed["lfc_is_home"]].shape[0]
     print(f"  {SEASON_LABELS[sid]}: {n} fixtures ({home} home, {n - home} away)")
 
 # ── Build game state intervals for all fixtures ───────────────────────────────
@@ -272,11 +272,17 @@ for sid in SEASON_IDS:
     lead_held_n = sub['lead_held'].sum()
     lead_blown_n = sub['lead_blown_perm'].sum()
     comeback_n = sub['comeback'].sum()
+    if n > 0:
+        ever_led_display = f"{ever_led_n} ({ever_led_n/n*100:.0f}%)"
+        ever_trailed_display = f"{ever_trailed_n} ({ever_trailed_n/n*100:.0f}%)"
+    else:
+        ever_led_display = "0 (0%)"
+        ever_trailed_display = "0 (0%)"
     lead_summary.append({
         "Season": SEASON_SHORT[sid],
         "Games": n,
-        "Ever Led": f"{ever_led_n} ({ever_led_n/n*100:.0f}%)",
-        "Ever Trailed": f"{ever_trailed_n} ({ever_trailed_n/n*100:.0f}%)",
+        "Ever Led": ever_led_display,
+        "Ever Trailed": ever_trailed_display,
         "Lead Held": f"{lead_held_n} of {ever_led_n}",
         "Lead Blown": f"{lead_blown_n} of {ever_led_n}",
         "Comeback": f"{comeback_n} of {ever_trailed_n}",
@@ -499,112 +505,115 @@ for fid, meta in fixture_states.items():
     bc["season"] = meta["season"]
     coord_frames.append(bc)
 
-coords_df = pd.concat(coord_frames, ignore_index=True)
-print(f"\nBall coordinates loaded: {len(coords_df):,} rows")
-print("\nGame state distribution:")
-print(coords_df["game_state"].value_counts())
+if not coord_frames:
+    print("\nNo ball coordinate data available (`ball_coordinates.csv` not found for any fixture); skipping Part 5.")
+else:
+    coords_df = pd.concat(coord_frames, ignore_index=True)
+    print(f"\nBall coordinates loaded: {len(coords_df):,} rows")
+    print("\nGame state distribution:")
+    print(coords_df["game_state"].value_counts())
 
-# Zone distribution by game state
-zone_order = ["defensive_third", "middle_third", "attacking_third"]
+    # Zone distribution by game state
+    zone_order = ["defensive_third", "middle_third", "attacking_third"]
 
-zone_summary = (
-    coords_df
-    .groupby(["season_id", "game_state", "pitch_zone"])
-    .size()
-    .reset_index(name="count")
-)
-zone_totals = coords_df.groupby(["season_id", "game_state"]).size().reset_index(name="total")
-zone_summary = zone_summary.merge(zone_totals, on=["season_id", "game_state"])
-zone_summary["pct"] = zone_summary["count"] / zone_summary["total"] * 100
+    zone_summary = (
+        coords_df
+        .groupby(["season_id", "game_state", "pitch_zone"])
+        .size()
+        .reset_index(name="count")
+    )
+    zone_totals = coords_df.groupby(["season_id", "game_state"]).size().reset_index(name="total")
+    zone_summary = zone_summary.merge(zone_totals, on=["season_id", "game_state"])
+    zone_summary["pct"] = zone_summary["count"] / zone_summary["total"] * 100
 
-print("\nPitch zone % when Liverpool are WINNING:")
-win_zones = zone_summary[zone_summary["game_state"] == "WIN"].copy()
-win_pivot = win_zones.pivot_table(index="season_id", columns="pitch_zone", values="pct").reindex(SEASON_IDS)
-win_pivot.index = [SEASON_SHORT[sid] for sid in SEASON_IDS]
-print(win_pivot[[z for z in zone_order if z in win_pivot.columns]].round(1).to_string())
+    print("\nPitch zone % when Liverpool are WINNING:")
+    win_zones = zone_summary[zone_summary["game_state"] == "WIN"].copy()
+    win_pivot = win_zones.pivot_table(index="season_id", columns="pitch_zone", values="pct").reindex(SEASON_IDS)
+    win_pivot.index = [SEASON_SHORT[sid] for sid in SEASON_IDS]
+    print(win_pivot[[z for z in zone_order if z in win_pivot.columns]].round(1).to_string())
 
-print("\nPitch zone % when Liverpool are DRAWING:")
-draw_zones = zone_summary[zone_summary["game_state"] == "DRAW"].copy()
-draw_pivot = draw_zones.pivot_table(index="season_id", columns="pitch_zone", values="pct").reindex(SEASON_IDS)
-draw_pivot.index = [SEASON_SHORT[sid] for sid in SEASON_IDS]
-print(draw_pivot[[z for z in zone_order if z in draw_pivot.columns]].round(1).to_string())
+    print("\nPitch zone % when Liverpool are DRAWING:")
+    draw_zones = zone_summary[zone_summary["game_state"] == "DRAW"].copy()
+    draw_pivot = draw_zones.pivot_table(index="season_id", columns="pitch_zone", values="pct").reindex(SEASON_IDS)
+    draw_pivot.index = [SEASON_SHORT[sid] for sid in SEASON_IDS]
+    print(draw_pivot[[z for z in zone_order if z in draw_pivot.columns]].round(1).to_string())
 
-print("\nPitch zone % when Liverpool are LOSING:")
-loss_zones = zone_summary[zone_summary["game_state"] == "LOSS"].copy()
-loss_pivot = loss_zones.pivot_table(index="season_id", columns="pitch_zone", values="pct").reindex(SEASON_IDS)
-loss_pivot.index = [SEASON_SHORT[sid] for sid in SEASON_IDS]
-print(loss_pivot[[z for z in zone_order if z in loss_pivot.columns]].round(1).to_string())
+    print("\nPitch zone % when Liverpool are LOSING:")
+    loss_zones = zone_summary[zone_summary["game_state"] == "LOSS"].copy()
+    loss_pivot = loss_zones.pivot_table(index="season_id", columns="pitch_zone", values="pct").reindex(SEASON_IDS)
+    loss_pivot.index = [SEASON_SHORT[sid] for sid in SEASON_IDS]
+    print(loss_pivot[[z for z in zone_order if z in loss_pivot.columns]].round(1).to_string())
 
-# Aggregate to per-fixture means before statistical testing (anti-pseudoreplication)
-fixture_zone_state = (
-    coords_df
-    .groupby(["fixture_id", "season_id", "season", "game_state", "pitch_zone"])
-    .size()
-    .unstack(fill_value=0)
-    .apply(lambda x: x / x.sum() * 100, axis=1)
-    .reset_index()
-)
+    # Aggregate to per-fixture means before statistical testing (anti-pseudoreplication)
+    fixture_zone_state = (
+        coords_df
+        .groupby(["fixture_id", "season_id", "season", "game_state", "pitch_zone"])
+        .size()
+        .unstack(fill_value=0)
+        .apply(lambda x: x / x.sum() * 100, axis=1)
+        .reset_index()
+    )
 
-# Note: unit of observation is (fixture × game_state) — a match with WIN and DRAW intervals
-# contributes two rows. This inflates n relative to a pure per-fixture design.
-# Test: attacking_third % when winning — Klopp vs Y2
-if "attacking_third" in fixture_zone_state.columns:
-    win_data = fixture_zone_state[fixture_zone_state["game_state"] == "WIN"]
-    k_att = win_data[win_data["season_id"] == 21646]["attacking_third"].dropna()
-    y2_att = win_data[win_data["season_id"] == 25583]["attacking_third"].dropna()
-    if len(k_att) > 3 and len(y2_att) > 3:
-        _, p = stats.mannwhitneyu(k_att, y2_att, alternative='two-sided')
-        d = (np.mean(k_att) - np.mean(y2_att)) / np.sqrt(
-            (np.std(k_att, ddof=1)**2 + np.std(y2_att, ddof=1)**2) / 2
-        )
-        print(f"\nAttacking third % when winning — Klopp vs Y2: "
-              f"Klopp={k_att.mean():.1f}% vs Y2={y2_att.mean():.1f}%, d={d:.3f}, p={p:.4f}")
+    # Note: unit of observation is (fixture × game_state) — a match with WIN and DRAW intervals
+    # contributes two rows. This inflates n relative to a pure per-fixture design.
+    # Test: attacking_third % when winning — Klopp vs Y2
+    if "attacking_third" in fixture_zone_state.columns:
+        win_data = fixture_zone_state[fixture_zone_state["game_state"] == "WIN"]
+        k_att = win_data[win_data["season_id"] == 21646]["attacking_third"].dropna()
+        y2_att = win_data[win_data["season_id"] == 25583]["attacking_third"].dropna()
+        if len(k_att) > 3 and len(y2_att) > 3:
+            _, p = stats.mannwhitneyu(k_att, y2_att, alternative='two-sided')
+            d = (np.mean(k_att) - np.mean(y2_att)) / np.sqrt(
+                (np.std(k_att, ddof=1)**2 + np.std(y2_att, ddof=1)**2) / 2
+            )
+            print(f"\nAttacking third % when winning — Klopp vs Y2: "
+                  f"Klopp={k_att.mean():.1f}% vs Y2={y2_att.mean():.1f}%, d={d:.3f}, p={p:.4f}")
 
-# Plot: zone distribution by game state (stacked bars)
-zone_colors = {
-    "defensive_third": "#B71C1C",
-    "middle_third": "#F57C00",
-    "attacking_third": "#1B5E20",
-}
+    # Plot: zone distribution by game state (stacked bars)
+    zone_colors = {
+        "defensive_third": "#B71C1C",
+        "middle_third": "#F57C00",
+        "attacking_third": "#1B5E20",
+    }
 
-fig, axes = plt.subplots(1, 3, figsize=(16, 5))
-fig.suptitle("Ball Zone Distribution by Game State and Season\n(absolute pitch zones)",
-             fontsize=13, fontweight="bold", y=1.03)
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    fig.suptitle("Ball Zone Distribution by Game State and Season\n(absolute pitch zones)",
+                 fontsize=13, fontweight="bold", y=1.03)
 
-for ax_idx, state in enumerate(STATE_ORDER):
-    ax = axes[ax_idx]
-    sub = zone_summary[zone_summary["game_state"] == state]
+    for ax_idx, state in enumerate(STATE_ORDER):
+        ax = axes[ax_idx]
+        sub = zone_summary[zone_summary["game_state"] == state]
 
-    x = np.arange(len(SEASON_IDS))
-    bottoms = np.zeros(len(SEASON_IDS))
+        x = np.arange(len(SEASON_IDS))
+        bottoms = np.zeros(len(SEASON_IDS))
 
-    for zone in zone_order:
-        vals = []
-        for sid in SEASON_IDS:
-            row = sub[(sub["season_id"] == sid) & (sub["pitch_zone"] == zone)]
-            vals.append(row["pct"].iloc[0] if not row.empty else 0)
+        for zone in zone_order:
+            vals = []
+            for sid in SEASON_IDS:
+                row = sub[(sub["season_id"] == sid) & (sub["pitch_zone"] == zone)]
+                vals.append(row["pct"].iloc[0] if not row.empty else 0)
 
-        ax.bar(x, vals, 0.55, bottom=bottoms,
-               color=zone_colors[zone], alpha=0.85,
-               label=zone.replace("_third", "").replace("_", " ").title())
+            ax.bar(x, vals, 0.55, bottom=bottoms,
+                   color=zone_colors[zone], alpha=0.85,
+                   label=zone.replace("_third", "").replace("_", " ").title())
 
-        for xi, v in zip(x, vals):
-            if v > 3:
-                ax.text(xi, bottoms[xi] + v / 2, f"{v:.0f}%",
-                        ha="center", va="center", fontsize=8, color="white", fontweight="bold")
-        bottoms += np.array(vals)
+            for xi, v in zip(x, vals):
+                if v > 3:
+                    ax.text(xi, bottoms[xi] + v / 2, f"{v:.0f}%",
+                            ha="center", va="center", fontsize=8, color="white", fontweight="bold")
+            bottoms += np.array(vals)
 
-    ax.set_xticks(x)
-    ax.set_xticklabels([SEASON_SHORT[sid] for sid in SEASON_IDS])
-    ax.set_ylabel("% of ball coordinates" if ax_idx == 0 else "")
-    ax.set_title(f"When {state}")
-    ax.set_ylim(0, 110)
-    if ax_idx == 2:
-        ax.legend(loc="upper right", fontsize=7)
+        ax.set_xticks(x)
+        ax.set_xticklabels([SEASON_SHORT[sid] for sid in SEASON_IDS])
+        ax.set_ylabel("% of ball coordinates" if ax_idx == 0 else "")
+        ax.set_title(f"When {state}")
+        ax.set_ylim(0, 110)
+        if ax_idx == 2:
+            ax.legend(loc="upper right", fontsize=7)
 
-plt.tight_layout()
-plt.savefig(FIG_DIR / "ball_zones_by_game_state.png", dpi=150, bbox_inches='tight')
-plt.close()
-print(f"Saved {FIG_DIR / 'ball_zones_by_game_state.png'}")
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "ball_zones_by_game_state.png", dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f"Saved {FIG_DIR / 'ball_zones_by_game_state.png'}")
 
 print("\nScript complete. All figures saved to figures/02_game_state/")

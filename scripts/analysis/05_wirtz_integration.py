@@ -6,15 +6,13 @@ import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy import stats
 
 from liverpool_strategy.analysis.notebook_helpers import (
     cohens_d, effect_label, mw_test,
-    KLOPP_COLOR, Y1_COLOR, Y2_COLOR,
+    KLOPP_COLOR, Y1_COLOR,
     SEASON_COLORS, SEASON_LABELS, SEASON_ORDER,
     setup_plot_style, get_data_dirs,
 )
@@ -38,7 +36,7 @@ print('Setup complete.')
 
 # ── Section 1: Load fixture metadata and identify Wirtz starts ────────────────
 meta = pd.read_csv(META_DIR / 'fixture_season_mapping.csv')
-processed = meta[meta['has_processed_data'] == True].copy()
+processed = meta[meta['has_processed_data'].eq(True)].copy()
 
 y2_fixtures = processed[processed['season'] == '2025-26'].copy()
 print(f'Y2 processed fixtures: {len(y2_fixtures)}')
@@ -169,8 +167,8 @@ print(att_pivot_y2.groupby('wirtz_started')[['key_passes', 'big_chances_created'
 ALPHA_BONFERRONI_WIRTZ = 0.05 / 4
 print(f'\nBonferroni-corrected alpha = {ALPHA_BONFERRONI_WIRTZ:.4f} (4 metrics)\n')
 
-wirtz_df    = att_pivot_y2[att_pivot_y2['wirtz_started'] == True]
-no_wirtz_df = att_pivot_y2[att_pivot_y2['wirtz_started'] == False]
+wirtz_df    = att_pivot_y2[att_pivot_y2['wirtz_started'].eq(True)]
+no_wirtz_df = att_pivot_y2[att_pivot_y2['wirtz_started'].eq(False)]
 
 test_metrics = [
     ('key_passes',          'Key Passes'),
@@ -318,8 +316,8 @@ if coord_y2 is not None:
 
     print('\nSpatial tests (Wirtz vs no-Wirtz, Y2):')
     for col, label in spatial_metrics:
-        w   = coord_y2[coord_y2['wirtz_started'] == True][col].dropna()
-        nw  = coord_y2[coord_y2['wirtz_started'] == False][col].dropna()
+        w   = coord_y2[coord_y2['wirtz_started'].eq(True)][col].dropna()
+        nw  = coord_y2[coord_y2['wirtz_started'].eq(False)][col].dropna()
         U, p, d = mw_test(w.values, nw.values)
         pct = (w.mean() - nw.mean()) / nw.mean() * 100 if len(nw) > 0 and nw.mean() != 0 else np.nan
         if not np.isnan(p):
@@ -334,8 +332,8 @@ if coord_y2 is not None:
                  fontsize=12, fontweight='bold')
 
     for ax, (col, title) in zip(axes, spatial_metrics):
-        w_vals  = coord_y2[coord_y2['wirtz_started'] == True][col].dropna().values
-        nw_vals = coord_y2[coord_y2['wirtz_started'] == False][col].dropna().values
+        w_vals  = coord_y2[coord_y2['wirtz_started'].eq(True)][col].dropna().values
+        nw_vals = coord_y2[coord_y2['wirtz_started'].eq(False)][col].dropna().values
 
         bp = ax.boxplot(
             [nw_vals, w_vals], patch_artist=True,
@@ -386,7 +384,7 @@ for ax, (col, label) in zip(axes, trend_metrics):
         continue
 
     for started, color, marker in [(True, WIRTZ_COLOR, 'o'), (False, NO_WIRTZ_COLOR, 's')]:
-        subset = att_y2_sorted[att_y2_sorted['wirtz_started'] == started]
+        subset = att_y2_sorted[att_y2_sorted['wirtz_started'].eq(started)]
         lbl = 'Wirtz start' if started else 'No Wirtz'
         ax.scatter(subset['match_number'], subset[col],
                    color=color, marker=marker, s=50, alpha=0.8, zorder=3, label=lbl)
@@ -410,7 +408,7 @@ for ax, (col, label) in zip(axes, trend_metrics):
 for col, label in trend_metrics:
     if col not in att_y2_sorted.columns:
         continue
-    subset = att_y2_sorted[att_y2_sorted['wirtz_started'] == True][['match_number', col]].dropna()
+    subset = att_y2_sorted[att_y2_sorted['wirtz_started'].eq(True)][['match_number', col]].dropna()
     if len(subset) >= 3:
         rho, p = stats.spearmanr(subset['match_number'], subset[col])
         print(f'  {label}: rho={rho:+.3f}, p={p:.3f} '
@@ -426,8 +424,8 @@ print(f'Saved {FIG_DIR / "wirtz_temporal_trend.png"}')
 # ── Section 5: Wirtz-Era Y2 vs Y1 Baseline ───────────────────────────────────
 att_y1    = att_pivot[att_pivot['season'] == '2024-25']
 att_klopp = att_pivot[att_pivot['season'] == '2023-24']
-att_wirtz = att_pivot_y2[att_pivot_y2['wirtz_started'] == True]
-att_no_wirtz = att_pivot_y2[att_pivot_y2['wirtz_started'] == False]
+att_wirtz = att_pivot_y2[att_pivot_y2['wirtz_started'].eq(True)]
+att_no_wirtz = att_pivot_y2[att_pivot_y2['wirtz_started'].eq(False)]
 
 summary_rows = []
 for grp_label, df in [

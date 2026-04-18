@@ -8,7 +8,6 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-import seaborn as sns
 import warnings
 from liverpool_strategy.analysis.notebook_helpers import cohens_d, effect_label, mw_test
 
@@ -30,7 +29,7 @@ SEASON_COLORS = {21646: "#c8102e", 23614: "#f6eb61", 25583: "#00b2a9"}
 fixture_map = pd.read_csv(METADATA_DIR / "fixture_season_mapping.csv")
 type_map = pd.read_csv(METADATA_DIR / "type_id_mapping.csv")
 
-processed = fixture_map[fixture_map["has_processed_data"] == True]
+processed = fixture_map[fixture_map["has_processed_data"].eq(True)]
 print(f"Fixtures: {len(processed)} | Seasons: {processed['season_id'].value_counts().to_dict()}")
 
 # ── Load statistics.csv for all processed fixtures ────────────────────────────
@@ -43,6 +42,12 @@ for _, row in processed.iterrows():
         df["season"] = row["season"]
         df["manager"] = row["manager"]
         frames.append(df)
+
+if not frames:
+    raise FileNotFoundError(
+        "No statistics.csv files were found for processed fixtures. "
+        "Check data/processed/fixtures or the fixture_season_mapping metadata."
+    )
 
 stats_df = pd.concat(frames, ignore_index=True)
 lfc = stats_df[stats_df["participant_id"] == LIVERPOOL_ID].copy()

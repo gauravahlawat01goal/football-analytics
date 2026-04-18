@@ -8,23 +8,21 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy import stats
 
 from liverpool_strategy.analysis.notebook_helpers import (
-    cohens_d, effect_label, mw_test,
+    cohens_d, effect_label,
     SEASON_COLORS, SEASON_LABELS, SEASON_ORDER,
     setup_plot_style, get_data_dirs, season_tick_labels,
-    KLOPP_COLOR, Y1_COLOR, Y2_COLOR,
 )
 
 warnings.filterwarnings('ignore')
 
 dirs = get_data_dirs(base="data/processed")
-DATA_DIR     = dirs.data
-META_DIR     = dirs.meta
+DATA_DIR = dirs.data
+META_DIR = dirs.meta
 FIXTURES_DIR = dirs.fixtures
-FBREF_DIR    = dirs.fbref
+FBREF_DIR = dirs.fbref
 
 FIG_DIR = Path("figures/03_pressing")
 FIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -35,7 +33,7 @@ print('Setup complete.')
 
 # ── Load statistics.csv for all processed fixtures ────────────────────────────
 meta = pd.read_csv(META_DIR / 'fixture_season_mapping.csv')
-processed = meta[meta['has_processed_data'] == True].copy()
+processed = meta[meta['has_processed_data'].eq(True)].copy()
 print(f'Processing {len(processed)} fixtures...')
 
 stats_rows = []

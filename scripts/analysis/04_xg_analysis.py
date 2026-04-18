@@ -6,18 +6,15 @@ import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy import stats
 from mplsoccer import VerticalPitch
 
 from liverpool_strategy.analysis.notebook_helpers import (
-    cohens_d, effect_label, mw_test,
+    cohens_d, effect_label,
     SEASON_COLORS, SEASON_LABELS, SEASON_ORDER,
     setup_plot_style, get_data_dirs, season_tick_labels,
-    KLOPP_COLOR, Y1_COLOR, Y2_COLOR,
 )
 
 warnings.filterwarnings('ignore')

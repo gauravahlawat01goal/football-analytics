@@ -9,10 +9,8 @@ import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from scipy import stats
 
 warnings.filterwarnings('ignore')
@@ -78,7 +76,7 @@ print('Helper functions defined.')
 
 # ── Load fixture metadata ─────────────────────────────────────────────────────
 meta = pd.read_csv(META_DIR / 'fixture_season_mapping.csv')
-processed = meta[meta['has_processed_data'] == True].copy()
+processed = meta[meta['has_processed_data'].eq(True)].copy()
 print(f'Processing {len(processed)} fixtures across {processed["season"].nunique()} seasons')
 print(processed.groupby(['season', 'manager']).size().rename('fixtures'))
 

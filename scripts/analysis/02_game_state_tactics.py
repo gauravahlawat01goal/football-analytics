@@ -22,13 +22,14 @@ LIVERPOOL_ID = 8
 SEASON_LABELS = {21646: "Klopp 23-24", 23614: "Slot Y1 24-25", 25583: "Slot Y2 25-26"}
 SEASON_SHORT = {21646: "Klopp", 23614: "Y1", 25583: "Y2"}
 SEASON_IDS = [21646, 23614, 25583]
-SEASON_COLORS = {21646: "#C8102E", 23614: "#00B2A9", 25583: "#F6C200"}
+SEASON_COLORS = {21646: "#c8102e", 23614: "#f6eb61", 25583: "#00b2a9"}
 STATE_COLORS = {"WIN": "#2E7D32", "DRAW": "#F57C00", "LOSS": "#C62828"}
 STATE_ORDER = ["WIN", "DRAW", "LOSS"]
 
 from liverpool_strategy.analysis.game_state import (
     get_lfc_is_home, reconstruct_game_states, get_state_at_minute, final_score
 )
+from liverpool_strategy.analysis.notebook_helpers import cohens_d, effect_label, mw_test
 
 # ── Load fixture metadata ─────────────────────────────────────────────────────
 fixture_map = pd.read_csv(METADATA_DIR / "fixture_season_mapping.csv")
@@ -345,29 +346,25 @@ print(f"Saved {FIG_DIR / 'lead_management.png'}")
 # ── Statistical tests ─────────────────────────────────────────────────────────
 print("\n=== STATISTICAL TESTS — % of match time in WIN state ===")
 
+# Bonferroni threshold for 3 game-state comparisons (WIN%, DRAW%, LOSS%)
+ALPHA_GAME_STATE = 0.05 / 3
+
 klopp_win = trans_df[trans_df["season_id"] == 21646]["pct_win"].values
 y1_win    = trans_df[trans_df["season_id"] == 23614]["pct_win"].values
 y2_win    = trans_df[trans_df["season_id"] == 25583]["pct_win"].values
 
-t, p = stats.ttest_ind(klopp_win, y2_win, equal_var=False)
-d = (np.mean(klopp_win) - np.mean(y2_win)) / np.sqrt(
-    (np.std(klopp_win, ddof=1)**2 + np.std(y2_win, ddof=1)**2) / 2
-)
+U, p, d = mw_test(klopp_win, y2_win)
 print(f"\n[CONFIRMATORY] Klopp vs Slot Y2 — % time winning")
 print(f"  Klopp: {np.mean(klopp_win):.1%} +/- {np.std(klopp_win, ddof=1):.1%}")
 print(f"  Slot Y2: {np.mean(y2_win):.1%} +/- {np.std(y2_win, ddof=1):.1%}")
-print(f"  Welch t={t:.3f}, p={p:.4f}, d={d:.2f}")
-print(f"  Conservative threshold (a/44=0.00114): {'SIGNIFICANT' if p < 0.00114 else 'not significant'}")
-print(f"  Notebook-family threshold (a/3=0.017):  {'SIGNIFICANT' if p < 0.017 else 'not significant'}")
+print(f"  Mann-Whitney U={U:.1f}, p={p:.4f}, d={d:.2f}")
+print(f"  Game-state threshold (a/3={ALPHA_GAME_STATE:.4f}): {'SIGNIFICANT' if p < ALPHA_GAME_STATE else 'not significant'}")
 
-t2, p2 = stats.ttest_ind(y1_win, y2_win, equal_var=False)
-d2 = (np.mean(y1_win) - np.mean(y2_win)) / np.sqrt(
-    (np.std(y1_win, ddof=1)**2 + np.std(y2_win, ddof=1)**2) / 2
-)
+U2, p2, d2 = mw_test(y1_win, y2_win)
 print(f"\n[EXPLORATORY] Slot Y1 vs Slot Y2 — % time winning")
 print(f"  Slot Y1: {np.mean(y1_win):.1%} +/- {np.std(y1_win, ddof=1):.1%}")
 print(f"  Slot Y2: {np.mean(y2_win):.1%} +/- {np.std(y2_win, ddof=1):.1%}")
-print(f"  Welch t={t2:.3f}, p={p2:.4f}, d={d2:.2f}")
+print(f"  Mann-Whitney U={U2:.1f}, p={p2:.4f}, d={d2:.2f}")
 print(f"  Nominal p < 0.05 -> {'directional signal' if p2 < 0.05 else 'no signal'}")
 
 klopp_loss = trans_df[trans_df["season_id"] == 21646]["pct_loss"].values
@@ -375,15 +372,12 @@ y1_loss    = trans_df[trans_df["season_id"] == 23614]["pct_loss"].values
 y2_loss    = trans_df[trans_df["season_id"] == 25583]["pct_loss"].values
 
 print("\n--- % time losing ---")
-t3, p3 = stats.ttest_ind(klopp_loss, y2_loss, equal_var=False)
-d3 = (np.mean(y2_loss) - np.mean(klopp_loss)) / np.sqrt(
-    (np.std(klopp_loss, ddof=1)**2 + np.std(y2_loss, ddof=1)**2) / 2
-)
+U3, p3, d3 = mw_test(klopp_loss, y2_loss)
 print(f"\n[CONFIRMATORY] Klopp vs Slot Y2 — % time losing")
 print(f"  Klopp: {np.mean(klopp_loss):.1%} +/- {np.std(klopp_loss, ddof=1):.1%}")
 print(f"  Slot Y2: {np.mean(y2_loss):.1%} +/- {np.std(y2_loss, ddof=1):.1%}")
-print(f"  Welch t={t3:.3f}, p={p3:.4f}, d={d3:.2f}")
-print(f"  Conservative threshold (a/44=0.00114): {'SIGNIFICANT' if p3 < 0.00114 else 'not significant'}")
+print(f"  Mann-Whitney U={U3:.1f}, p={p3:.4f}, d={d3:.2f}")
+print(f"  Game-state threshold (a/3={ALPHA_GAME_STATE:.4f}): {'SIGNIFICANT' if p3 < ALPHA_GAME_STATE else 'not significant'}")
 
 # ── Part 4: Goals by Game State ───────────────────────────────────────────────
 goal_state_records = []
@@ -551,6 +545,8 @@ fixture_zone_state = (
     .reset_index()
 )
 
+# Note: unit of observation is (fixture × game_state) — a match with WIN and DRAW intervals
+# contributes two rows. This inflates n relative to a pure per-fixture design.
 # Test: attacking_third % when winning — Klopp vs Y2
 if "attacking_third" in fixture_zone_state.columns:
     win_data = fixture_zone_state[fixture_zone_state["game_state"] == "WIN"]

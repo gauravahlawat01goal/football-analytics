@@ -75,13 +75,19 @@ fixture_metrics = pivot.pivot_table(
     aggfunc='first'
 ).reset_index()
 
-fixture_metrics['defensive_actions'] = (
-    fixture_metrics.get('tackles', pd.Series(dtype=float)).fillna(0) +
-    fixture_metrics.get('interceptions', pd.Series(dtype=float)).fillna(0)
-)
-# Fix: use column-based approach
-if 'tackles' in fixture_metrics.columns and 'interceptions' in fixture_metrics.columns:
-    fixture_metrics['defensive_actions'] = fixture_metrics['tackles'].fillna(0) + fixture_metrics['interceptions'].fillna(0)
+has_tackles = 'tackles' in fixture_metrics.columns
+has_interceptions = 'interceptions' in fixture_metrics.columns
+
+if has_tackles and has_interceptions:
+    fixture_metrics['defensive_actions'] = (
+        fixture_metrics['tackles'].fillna(0) + fixture_metrics['interceptions'].fillna(0)
+    )
+elif has_tackles:
+    fixture_metrics['defensive_actions'] = fixture_metrics['tackles'].fillna(0)
+elif has_interceptions:
+    fixture_metrics['defensive_actions'] = fixture_metrics['interceptions'].fillna(0)
+else:
+    fixture_metrics['defensive_actions'] = 0.0
 
 print(f'Fixture-level pressing metrics shape: {fixture_metrics.shape}')
 print(fixture_metrics.groupby('season')[['tackles', 'interceptions', 'fouls', 'defensive_actions']].mean().round(2))

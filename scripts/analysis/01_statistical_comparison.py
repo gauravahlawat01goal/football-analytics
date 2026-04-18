@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
 import warnings
+from liverpool_strategy.analysis.notebook_helpers import cohens_d, effect_label, mw_test
 
 warnings.filterwarnings('ignore')
 
@@ -23,7 +24,7 @@ LIVERPOOL_ID = 8
 SEASON_LABELS = {21646: "Klopp 23-24", 23614: "Slot Y1 24-25", 25583: "Slot Y2 25-26"}
 SEASON_SHORT = {21646: "Klopp", 23614: "Y1", 25583: "Y2"}
 SEASON_IDS = [21646, 23614, 25583]
-SEASON_COLORS = {21646: "#C8102E", 23614: "#00B2A9", 25583: "#F6C200"}
+SEASON_COLORS = {21646: "#c8102e", 23614: "#f6eb61", 25583: "#00b2a9"}
 
 # ── Load fixture metadata ─────────────────────────────────────────────────────
 fixture_map = pd.read_csv(METADATA_DIR / "fixture_season_mapping.csv")
@@ -60,12 +61,10 @@ print("\nSeason means (sample):")
 print(season_means.T.head(10))
 
 # ── Helper functions ──────────────────────────────────────────────────────────
-def cohen_d(a, b):
-    pooled_std = np.sqrt((np.std(a, ddof=1)**2 + np.std(b, ddof=1)**2) / 2)
-    return (np.mean(a) - np.mean(b)) / pooled_std if pooled_std > 0 else 0
+BONFERRONI_N = 44  # 44-metric family for confirmatory tests
 
 def run_tests(wide, sid_a, sid_b, label_a, label_b, stat_cols):
-    n_tests = len(stat_cols)
+    n_tests = BONFERRONI_N
     results = []
     g_a = wide[wide["season_id"] == sid_a]
     g_b = wide[wide["season_id"] == sid_b]
@@ -74,8 +73,7 @@ def run_tests(wide, sid_a, sid_b, label_a, label_b, stat_cols):
         b = g_b[col].dropna()
         if len(a) < 3 or len(b) < 3:
             continue
-        _, p = stats.ttest_ind(a, b, equal_var=False)
-        d = cohen_d(a.values, b.values)
+        U, p, d = mw_test(a.values, b.values)
         results.append({
             "metric": col,
             "mean_a": round(a.mean(), 2),
@@ -262,12 +260,9 @@ for metric, label in [
     ("mean_attack_duration_mins", "Mean Attack Duration (mins)"),
 ]:
     a_k, a_y1, a_y2 = klopp[metric].dropna(), y1[metric].dropna(), y2[metric].dropna()
-    _, p_k_y1 = stats.ttest_ind(a_k, a_y1, equal_var=False)
-    _, p_k_y2 = stats.ttest_ind(a_k, a_y2, equal_var=False)
-    _, p_y1_y2 = stats.ttest_ind(a_y1, a_y2, equal_var=False)
-    d_k_y1 = cohen_d(a_k.values, a_y1.values)
-    d_k_y2 = cohen_d(a_k.values, a_y2.values)
-    d_y1_y2 = cohen_d(a_y1.values, a_y2.values)
+    _, p_k_y1, d_k_y1 = mw_test(a_k.values, a_y1.values)
+    _, p_k_y2, d_k_y2 = mw_test(a_k.values, a_y2.values)
+    _, p_y1_y2, d_y1_y2 = mw_test(a_y1.values, a_y2.values)
     print(f"\n{label}")
     print(f"  Klopp {a_k.mean():.2f} | Y1 {a_y1.mean():.2f} | Y2 {a_y2.mean():.2f}")
     print(f"  Klopp->Y1: p={p_k_y1:.3f}, d={d_k_y1:.3f} | Klopp->Y2: p={p_k_y2:.3f}, d={d_k_y2:.3f}")

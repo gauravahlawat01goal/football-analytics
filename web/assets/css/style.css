@@ -128,6 +128,15 @@ header p.subtitle {
   line-height: 1.75;
 }
 
+.hero-project-note {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  margin-top: -1.25rem;
+  margin-bottom: 0;
+}
+
 .header-meta {
   display: flex;
   flex-wrap: wrap;
@@ -367,6 +376,98 @@ h2 {
   font-weight: 600;
   color: var(--text-secondary);
   background: #F7F7F5;
+}
+
+/* ── Nav text links ── */
+.site-nav-text {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.site-nav-text:hover { color: var(--text); text-decoration: none; }
+
+/* ── Featured card ── */
+.featured-card {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 0 6px 6px 0;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.featured-eyebrow {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.featured-card-content h3 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.featured-card-content p {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+.featured-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--red);
+}
+.featured-card-link {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--red);
+  text-decoration: none;
+  align-self: flex-start;
+}
+.featured-card-link:hover { text-decoration: underline; }
+
+/* ── Findings list ── */
+.findings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 1.5rem;
+}
+.finding-item {
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  align-items: baseline;
+}
+.finding-item:last-child { border-bottom: 1px solid var(--border); }
+.finding-label {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.finding-detail {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 /* ── About section ── */

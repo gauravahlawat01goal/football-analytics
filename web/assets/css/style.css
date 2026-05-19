@@ -732,16 +732,16 @@ footer a:hover { color: var(--text); }
 
 /* ── Post layout ── */
 .post-header {
-  padding: 2.5rem 0 2rem;
+  padding: 1.75rem 0 1.25rem;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .post-header .post-meta {
   font-family: var(--sans);
   font-size: 0.78rem;
   color: var(--text-muted);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
@@ -755,7 +755,7 @@ footer a:hover { color: var(--text); }
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--text);
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .post-header .post-lede {
@@ -891,6 +891,26 @@ footer a:hover { color: var(--text); }
 .gap-highlight {
   font-weight: 700;
   color: var(--text);
+}
+
+.post-figure {
+  margin: 2rem 0;
+}
+
+.post-figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: block;
+}
+
+.post-figure figcaption {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
 .post-footer-note {

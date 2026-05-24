@@ -7,6 +7,7 @@ This package contains modules for processing and transforming raw football data:
 - Player position analysis
 - Match statistics processing
 - Match scores processing
+- Understat data processing
 """
 
 from .ball_coordinates import BallCoordinateProcessor
@@ -15,6 +16,7 @@ from .formations import FormationParser
 from .player_database import PlayerIDExtractor
 from .scores import ScoresProcessor
 from .statistics import StatisticsProcessor
+from .understat import UnderstatProcessor
 
 __all__ = [
     "BallCoordinateProcessor",
@@ -23,4 +25,5 @@ __all__ = [
     "PlayerIDExtractor",
     "ScoresProcessor",
     "StatisticsProcessor",
+    "UnderstatProcessor",
 ]

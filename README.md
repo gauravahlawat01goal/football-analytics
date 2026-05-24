@@ -62,13 +62,14 @@ football-analytics/
 │   └── 06_second_half.py              # Generates figures/06_second_half/
 ├── figures/                            # Generated charts (26 PNGs across 6 subdirs)
 ├── scripts/
-│   ├── 01_collect_fixtures*.py         # Fixture collection (date search / team endpoint)
-│   ├── 02_collect_match_data.py        # Fetch all includes per fixture (7 API calls each)
+│   ├── 01_collect_fixtures*.py         # Fixture collection (CLI parameterized)
+│   ├── 02_collect_match_data.py        # Fetch all includes per fixture (CLI parameterized)
 │   ├── 03_process_match_data.py        # Main processing pipeline
 │   ├── 04_fetch_type_mappings.py       # Verify statistics type_id mapping
 │   ├── 05_process_statistics_scores.py # Process statistics.csv and scores.csv per fixture
-│   ├── 06_fetch_understat_xg.py        # Fetch Understat per-shot xG (Tier 2)
-│   └── 07_fetch_fbref_ppda.py          # Fetch FBRef PPDA (Tier 3)
+│   ├── 06_fetch_understat_xg.py        # Fetch Understat per-shot xG (CLI parameterized)
+│   ├── 07_fetch_fbref_ppda.py          # Fetch FBRef PPDA (Tier 3)
+│   └── 08_fetch_understat_ppda.py      # Fetch Understat PPDA and deep completions
 ├── src/liverpool_strategy/
 │   ├── analysis/
 │   │   └── notebook_helpers.py         # Shared: cohens_d, mw_test, colors, setup_plot_style
@@ -82,7 +83,8 @@ football-analytics/
 │   │   ├── lineups.py
 │   │   ├── formations.py
 │   │   ├── statistics.py
-│   │   └── scores.py
+│   │   ├── scores.py
+│   │   └── understat.py                # Understat math/geometry processing
 │   └── utils/                          # Logging, JSON helpers, backup
 ├── web/                                # GitHub Pages publication site (Jekyll)
 │   ├── _config.yml                     # Site config, baseurl /football-analytics
@@ -199,6 +201,7 @@ poetry run pytest
 | `04_xg_analysis.ipynb` | ✅ Written | Understat per-shot xG analysis. xG vs goals scatter (quality vs luck proof). Shot location pitch maps. Set-piece vs open-play xG breakdown. Needs Jupyter execution. |
 | `05_wirtz_integration.ipynb` | ✅ Written | With/without Wirtz starting — attacking output (Key Passes, Big Chances, Shots) + spatial final-third analysis + temporal integration trend. Needs Jupyter execution. |
 | `06_second_half.ipynb` | ✅ Written | H1 vs H2 goals, goal timing in 15-min bins, territorial decay curve, substitution timing proxy. Needs Jupyter execution. |
+| `alonso_tactical_fit_analysis.ipynb` | ✅ Done | Klopp vs. Slot vs. Alonso tactical fit analysis. PPDA comparisons, Non-Penalty xG, and real-world 105x68m shot distance distributions. |
 
 ---
 

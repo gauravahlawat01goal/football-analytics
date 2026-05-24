@@ -39,6 +39,7 @@ TODO (Framework Evolution):
     - Add email/Slack notification on completion
 """
 
+import argparse
 from pathlib import Path
 import sys
 
@@ -49,15 +50,15 @@ from football_analytics.collectors import MatchDataCollector
 from football_analytics.utils import backup_directory, load_json, setup_logging
 
 
-def print_header():
+def print_header(input_file: str):
     """Print script header."""
     print("=" * 70)
-    print("LIVERPOOL MATCH DATA COLLECTION")
+    print(f"MATCH DATA COLLECTION - {input_file}")
     print("=" * 70)
     print()
 
 
-def print_configuration(num_fixtures: int):
+def print_configuration(num_fixtures: int, output_dir: str):
     """Print collection configuration."""
     print("Configuration:")
     print(f"  Fixtures to collect: {num_fixtures}")
@@ -65,7 +66,7 @@ def print_configuration(num_fixtures: int):
     print(f"  Total API calls: {num_fixtures * 7}")
     print("  Rate limit: 6 seconds between calls")
     print(f"  Estimated time: ~{(num_fixtures * 7 * 6) / 60:.1f} minutes")
-    print("  Output directory: data/raw/")
+    print(f"  Output directory: {output_dir}/")
     print()
 
 
@@ -87,14 +88,14 @@ def print_includes_info():
     print()
 
 
-def backup_collected_data(fixture_ids: list):
+def backup_collected_data(fixture_ids: list, output_dir: Path):
     """Create backup of collected data."""
     print()
     print("Creating backup of collected data...")
 
     backed_up = 0
     for fixture_id in fixture_ids:
-        fixture_dir = Path(f"data/raw/{fixture_id}")
+        fixture_dir = output_dir / str(fixture_id)
         if fixture_dir.exists():
             try:
                 backup_directory(fixture_dir, Path("data/backup"))
@@ -106,7 +107,7 @@ def backup_collected_data(fixture_ids: list):
     print()
 
 
-def print_summary(results: dict, collector: MatchDataCollector):
+def print_summary(results: dict, collector: MatchDataCollector, output_dir: str):
     """Print collection summary."""
     print()
     print("=" * 70)
@@ -152,40 +153,41 @@ def print_summary(results: dict, collector: MatchDataCollector):
     print()
 
     # Data location
-    print("✓ Data saved to: data/raw/")
+    print(f"✓ Data saved to: {output_dir}/")
     print("✓ Backup created in: data/backup/")
     print()
 
-    print("Next steps:")
-    print("  1. Verify data quality (check a few fixture directories)")
-    print("  2. Run 03_process_ball_coords.py to process ball coordinates")
-    print("  3. Run 04_process_events.py to process match events")
-    print()
 
+def main() -> None:
+    """Download match data for fixtures."""
+    parser = argparse.ArgumentParser(description="Download match data for fixtures.")
+    parser.add_argument("--input-file", type=str, required=True, help="Path to fixtures_list.json")
+    parser.add_argument("--output-dir", type=str, default="data/raw", help="Directory to save outputs")
+    parser.add_argument("--yes", "-y", action="store_true", help="Bypass confirmation prompt")
+    args = parser.parse_args()
 
-def main():
-    """Download all match data for Liverpool fixtures."""
+    input_path = Path(args.input_file)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     # Setup logging
     setup_logging(level="INFO", log_file="logs/02_collect_match_data.log")
 
-    print_header()
+    print_header(args.input_file)
 
-    # Load fixtures list
-    fixtures_path = Path("data/raw/fixtures_list.json")
-
-    if not fixtures_path.exists():
-        print("ERROR: fixtures_list.json not found!")
+    if not input_path.exists():
+        print(f"ERROR: {args.input_file} not found!")
         print("Please run 01_collect_fixtures.py first.")
         print()
         return
 
-    fixtures = load_json(fixtures_path)
+    fixtures = load_json(input_path)
 
-    print(f"Loaded {len(fixtures)} fixtures from {fixtures_path}")
+    print(f"Loaded {len(fixtures)} fixtures from {input_path}")
     print()
 
     # Print configuration
-    print_configuration(len(fixtures))
+    print_configuration(len(fixtures), str(output_dir))
     print_includes_info()
 
     # Confirm before starting
@@ -193,11 +195,12 @@ def main():
     print("Resume is enabled - existing files will be skipped")
     print()
 
-    response = input("Continue? [Y/n]: ").strip().lower()
-    if response and response != "y":
-        print("Collection cancelled.")
-        return
-
+    if not args.yes and sys.stdin.isatty():
+        response = input("Continue? [Y/n]: ").strip().lower()
+        if response and response != "y":
+            print("Collection cancelled.")
+            return
+    
     print()
     print("Starting collection...")
     print("=" * 70)
@@ -205,7 +208,7 @@ def main():
 
     # Initialize collector
     collector = MatchDataCollector(
-        output_dir="data/raw", rate_limit_seconds=6.0, resume=True  # Skip existing files
+        output_dir=str(output_dir), rate_limit_seconds=6.0, resume=True  # Skip existing files
     )
 
     # Collect all fixtures
@@ -213,10 +216,10 @@ def main():
 
     # Create backup
     fixture_ids = [f["fixture_id"] for f in fixtures]
-    backup_collected_data(fixture_ids)
+    backup_collected_data(fixture_ids, output_dir)
 
     # Print summary
-    print_summary(results, collector)
+    print_summary(results, collector, str(output_dir))
 
 
 if __name__ == "__main__":

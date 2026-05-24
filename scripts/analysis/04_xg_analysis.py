@@ -33,19 +33,21 @@ TICK_LABELS = season_tick_labels(short=True)
 print('Setup complete.')
 
 # ── Load Understat data ───────────────────────────────────────────────────────
-match_xg = pd.read_csv(UNDERSTAT_DIR / 'match_xg.csv')
+match_xg = pd.read_csv(UNDERSTAT_DIR / 'liverpool_match_xg.csv')
+match_xg['season'] = match_xg['season'].astype(str).map({'2023': '2023-24', '2024': '2024-25', '2025': '2025-26'})
 match_xg['date'] = pd.to_datetime(match_xg['date'])
 
-shots = pd.read_csv(UNDERSTAT_DIR / 'shots.csv')
+shots = pd.read_csv(UNDERSTAT_DIR / 'liverpool_shots.csv')
+shots['season'] = shots['season'].astype(str).map({'2023': '2023-24', '2024': '2024-25', '2025': '2025-26'})
 shots['date'] = pd.to_datetime(shots['date'])
 
 print(f'Match xG: {len(match_xg)} matches')
 print(f'Shots: {len(shots)} shots')
 print()
-print(match_xg.groupby(['season', 'manager']).size().rename('matches'))
+print(match_xg.groupby(['season']).size().rename('matches'))
 print()
 print('Match xG per season:')
-print(match_xg.groupby('season')[['lfc_xg', 'opp_xg', 'lfc_goals', 'opp_goals']].mean().round(3))
+print(match_xg.groupby('season')[['team_xg', 'opp_xg', 'team_goals', 'opp_goals']].mean().round(3))
 
 ALPHA_BONFERRONI = 0.05 / 4  # 4 main xG metrics
 
@@ -56,9 +58,9 @@ print('\n=== Match-level xG Statistical Tests ===')
 print(f'Confirmatory alpha = {ALPHA_BONFERRONI:.4f} (Bonferroni-corrected)\n')
 
 for metric, label in [
-    ('lfc_xg', 'LFC xG for'),
+    ('team_xg', 'LFC xG for'),
     ('opp_xg', 'xG Against (opponent xG)'),
-    ('lfc_goals', 'LFC Goals'),
+    ('team_goals', 'LFC Goals'),
     ('opp_goals', 'Goals Against'),
 ]:
     k = season_data['2023-24'][metric]
@@ -84,7 +86,7 @@ fig, axes = plt.subplots(1, 2, figsize=(13, 6))
 fig.suptitle('Liverpool xG per Match by Season', fontsize=14, fontweight='bold')
 
 for ax, (metric, title, invert) in zip(axes, [
-    ('lfc_xg', 'xG For (Liverpool)', False),
+    ('team_xg', 'xG For (Liverpool)', False),
     ('opp_xg', 'xG Against (Opponent)', True),
 ]):
     data_per_season = [season_data[s][metric].values for s in SEASON_ORDER]
@@ -115,7 +117,7 @@ plt.close()
 print(f'Saved {FIG_DIR / "xg_per_match.png"}')
 
 # ── Section 2: xG vs Actual Goals — Luck or Quality? ─────────────────────────
-match_xg['xg_overperf'] = match_xg['lfc_goals'] - match_xg['lfc_xg']
+match_xg['xg_overperf'] = match_xg['team_goals'] - match_xg['team_xg']
 match_xg['xga_overperf'] = match_xg['opp_goals'] - match_xg['opp_xg']
 
 print('xG Overperformance (Goals - xG) per season:')
@@ -141,15 +143,15 @@ fig.suptitle('xG vs Actual Goals per Match (each dot = 1 match)', fontsize=13, f
 
 for ax, s in zip(axes, SEASON_ORDER):
     d = season_data[s]
-    ax.scatter(d['lfc_xg'], d['lfc_goals'], color=SEASON_COLORS[s], alpha=0.7, s=50, zorder=3)
-    max_val = max(d['lfc_xg'].max(), d['lfc_goals'].max()) + 0.5
+    ax.scatter(d['team_xg'], d['team_goals'], color=SEASON_COLORS[s], alpha=0.7, s=50, zorder=3)
+    max_val = max(d['team_xg'].max(), d['team_goals'].max()) + 0.5
     ax.plot([0, max_val], [0, max_val], 'k--', alpha=0.4, linewidth=1, label='Goals = xG')
-    m, b, r, p, _ = stats.linregress(d['lfc_xg'], d['lfc_goals'])
-    x_line = np.linspace(d['lfc_xg'].min(), d['lfc_xg'].max(), 50)
+    m, b, r, p, _ = stats.linregress(d['team_xg'], d['team_goals'])
+    x_line = np.linspace(d['team_xg'].min(), d['team_xg'].max(), 50)
     ax.plot(x_line, m * x_line + b, color=SEASON_COLORS[s], linewidth=2, label=f'Trend (r={r:.2f})')
 
-    mean_xg = d['lfc_xg'].mean()
-    mean_g = d['lfc_goals'].mean()
+    mean_xg = d['team_xg'].mean()
+    mean_g = d['team_goals'].mean()
     ax.text(0.05, 0.95, f'Mean xG: {mean_xg:.2f}\nMean Goals: {mean_g:.2f}\nDiff: {mean_g-mean_xg:+.2f}',
             transform=ax.transAxes, fontsize=9, va='top',
             bbox={'facecolor': 'white', 'alpha': 0.8, 'pad': 3})
@@ -367,8 +369,8 @@ for s in SEASON_ORDER:
     row = {
         'Season': SEASON_LABELS[s],
         'Matches': n,
-        'Goals/match': m['lfc_goals'].mean(),
-        'xG/match': m['lfc_xg'].mean(),
+        'Goals/match': m['team_goals'].mean(),
+        'xG/match': m['team_xg'].mean(),
         'Goals - xG': m['xg_overperf'].mean(),
         'Shots/match': len(d) / n,
         'xG/shot': d['xg'].mean(),

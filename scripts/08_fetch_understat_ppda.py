@@ -39,10 +39,10 @@ def main() -> None:
                         "h_a": match["h_a"],
                         "ppda_att": match["ppda"]["att"],
                         "ppda_def": match["ppda"]["def"],
-                        "ppda": match["ppda"]["att"] / match["ppda"]["def"] if match["ppda"]["def"] > 0 else 0,
+                        "ppda": match["ppda"]["att"] / match["ppda"]["def"] if match["ppda"]["def"] > 0 else None,
                         "ppda_allowed_att": match["ppda_allowed"]["att"],
                         "ppda_allowed_def": match["ppda_allowed"]["def"],
-                        "ppda_allowed": match["ppda_allowed"]["att"] / match["ppda_allowed"]["def"] if match["ppda_allowed"]["def"] > 0 else 0,
+                        "ppda_allowed": match["ppda_allowed"]["att"] / match["ppda_allowed"]["def"] if match["ppda_allowed"]["def"] > 0 else None,
                         "deep": match["deep"],
                         "deep_allowed": match["deep_allowed"]
                     })

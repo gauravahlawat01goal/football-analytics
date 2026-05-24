@@ -163,6 +163,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Download match data for fixtures.")
     parser.add_argument("--input-file", type=str, required=True, help="Path to fixtures_list.json")
     parser.add_argument("--output-dir", type=str, default="data/raw", help="Directory to save outputs")
+    parser.add_argument("--yes", "-y", action="store_true", help="Bypass confirmation prompt")
     args = parser.parse_args()
 
     input_path = Path(args.input_file)
@@ -194,8 +195,11 @@ def main() -> None:
     print("Resume is enabled - existing files will be skipped")
     print()
 
-    # Disable interactive prompt to allow automated runs, or pass a flag, but for now we remove it
-    # to support CI/automation as requested by the architectural shift.
+    if not args.yes and sys.stdin.isatty():
+        response = input("Continue? [Y/n]: ").strip().lower()
+        if response and response != "y":
+            print("Collection cancelled.")
+            return
     
     print()
     print("Starting collection...")

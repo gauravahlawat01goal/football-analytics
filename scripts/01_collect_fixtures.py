@@ -73,11 +73,9 @@ def main() -> None:
         rate_limit_seconds=6.0,
         resume=True,
     )
-    # The FixtureCollector by default outputs to `fixtures_list.json` in output_dir. Let's see if we can override it.
-    # We might need to handle the output_filename separately or rely on renaming it after.
-    # Let's check if FixtureCollector allows custom filename. It might just write to `fixtures_list.json`.
-    # Let's fix this up by reading the source of FixtureCollector.
-
+    # The FixtureCollector inherently writes to `fixtures_list.json` in the output_dir. 
+    # We will let it complete and rename the file atomically afterwards to our team-scoped name.
+    
     # Collect fixtures for both seasons
     print("Starting collection...")
     print()
@@ -89,15 +87,8 @@ def main() -> None:
     # Move the file if the default name was used
     default_output = output_dir / "fixtures_list.json"
     if default_output.exists() and default_output != output_path:
-        import shutil
-        import json
-        
-        # Load from default, save to customized, remove default
-        with open(default_output, "r") as f:
-            data = json.load(f)
-        with open(output_path, "w") as f:
-            json.dump(data, f, indent=2)
-        default_output.unlink()
+        # Atomic rename to the specified team-scoped filename
+        default_output.replace(output_path)
 
     # Print summary
     print()

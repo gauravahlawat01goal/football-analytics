@@ -5,7 +5,8 @@ layout: default
   <a href="{{ '/liverpool/decline/' | relative_url }}" class="back-link">← Liverpool analysis</a>
   <div class="post-header">
     <div class="post-meta">
-      {{ page.date | date: "%B %-d, %Y" }} · {{ page.data_source }}
+      {% assign byline_date = page.updated | default: page.date %}
+      Updated {{ byline_date | date: "%B %-d, %Y" }}
     </div>
     <h1>{{ page.title }}</h1>
   </div>

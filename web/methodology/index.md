@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Methodology | Liverpool FC Analysis"
-description: "Data sources, statistical framework, and caveats for the Liverpool FC three-season analysis. SportsMonks, Understat, Mann-Whitney U, Bonferroni correction."
+description: "How the three-season Liverpool analysis was built — data sources, statistical tests, and what the findings can and cannot claim."
 permalink: /methodology/
 ---
 
@@ -21,12 +21,12 @@ permalink: /methodology/
       <div class="source-card">
         <div class="tier">Tier 1 · Match data</div>
         <h4>SportsMonks API v3</h4>
-        <p>101 processed fixtures across three seasons. 44 match statistics per team per match — shots, tackles, passes, possession, interceptions, key passes, big chances, and more. Also: lineups, formations, ball coordinates, goals, and scores.</p>
+        <p>114 processed fixtures across three seasons. 44 match statistics per team per match — shots, tackles, passes, possession, interceptions, key passes, big chances, and more. Also: lineups, formations, ball coordinates, goals, and scores.</p>
       </div>
       <div class="source-card">
         <div class="tier">Tier 2 · xG enrichment</div>
         <h4>Understat</h4>
-        <p>107 matches, 1,924 per-shot xG records with coordinates. Enables xG/match, xG/shot, and open-play vs set-piece breakdown. Shot-level data covers the first 30 Y2 matches; match-level xG updated to 38 matches (full season).</p>
+        <p>Match-level xG: all 114 fixtures across three complete seasons. Per-shot records with coordinates: 106 fixtures — full Klopp and Slot Y1, plus the first 30 of Slot Y2. Enables xG/match, xG/shot, and open-play vs set-piece breakdown.</p>
       </div>
       <div class="source-card">
         <div class="tier">Tier 3 · Pressing metrics</div>
@@ -52,12 +52,11 @@ permalink: /methodology/
         Mann-Whitney U is a non-parametric rank-based test — appropriate for match statistics, which
         are bounded and often skewed. The original notebook analysis used Welch's t-test; the confirmed
         findings below hold under both approaches. Only findings that survive the Bonferroni threshold
-        are reported as <strong>confirmed</strong>. Full-season data used: 38 Klopp matches, 38 Y2 matches (season complete).
+        are reported as <strong>confirmed</strong>. Full-season data used: 38 Klopp matches, 38 Y2 matches.
       </p>
       <p>
-        <strong>Exploratory analysis</strong> (Slot Y1 vs Y2): Y2 is now a complete season — 38 of 38
-        matches played. Y1-vs-Y2 comparisons report effect sizes and directional signals
-        only. These are clearly labelled as <strong>directional</strong>. Nominal p-values are noted
+        <strong>Exploratory analysis</strong> (Slot Y1 vs Y2): Y1-vs-Y2 comparisons report effect sizes
+        and directional signals only. These are clearly labelled as <strong>directional</strong>. Nominal p-values are noted
         but not treated as sufficient on their own.
       </p>
       <p>
@@ -82,7 +81,7 @@ permalink: /methodology/
     </p>
     <div class="confirmed-grid">
       <div class="confirmed-card">
-        <div class="c-label">Ball Safe</div>
+        <div class="c-label">Ball Safe (secure possession)</div>
         <div class="c-value">−13.9%</div>
         <div class="c-meta">Cohen's d = 1.06 — very large effect</div>
       </div>
@@ -131,8 +130,8 @@ permalink: /methodology/
       </p>
     </div>
     <div class="caveat-box">
-      Slot Y2: season complete — 38 of 38 matches. Match-level xG covers all 38 matches via Understat.
-      Shot-level breakdowns (xG/shot, set-piece xG) based on first 30-match pull and labelled accordingly.
+      Match-level xG covers all 38 Slot Y2 matches via Understat. Shot-level breakdowns (xG/shot,
+      set-piece xG) are based on the first 30-match pull and labelled accordingly.
     </div>
   </section>
 

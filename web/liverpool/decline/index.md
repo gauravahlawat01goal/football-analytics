@@ -8,7 +8,7 @@ permalink: /liverpool/decline/
 <header>
   <div class="badge">Liverpool FC · Slot Y2 Analysis</div>
   <h1>Something broke<br>in year two.</h1>
-  <p class="hero-sub-headline">The data says so. Let's show you where.</p>
+  <p class="hero-sub-headline">Three seasons. Two data sources. One clear conclusion.</p>
   <p class="subtitle">Klopp's final season. Slot's first two. What the data says happened.</p>
 </header>
 
@@ -17,7 +17,7 @@ permalink: /liverpool/decline/
   <!-- ── The centrepiece number ── -->
   <section>
     <div class="section-label">The number that started this</div>
-    <h2>Liverpool's expected goals fell off a cliff.</h2>
+    <h2>Liverpool's expected goals dropped by nearly a third.</h2>
     <p class="section-intro">
       Slot's first season was efficient — fewer shots, better quality, same output. Year two lost both.
       This is not a finishing slump. The underlying chances themselves got worse.
@@ -30,7 +30,7 @@ permalink: /liverpool/decline/
       </div>
       <div class="hero-stat-text">
         <div class="hero-delta">↓ 29% from Klopp (2.49) · ↓ 28% from Slot Y1 (2.45)</div>
-        <h3>Liverpool's attacking xG fell 29% — full season, 38 matches</h3>
+        <h3>Liverpool's attacking xG fell 29% across three seasons</h3>
       </div>
     </div>
 
@@ -109,11 +109,11 @@ permalink: /liverpool/decline/
       </table>
     </div>
     <p class="gap-insight">
-      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance; then the final match at Brentford (2.99 xG, 1 goal) reversed much of it. The full-season gap settled at −0.11 — closer to the historical pattern than the late-season scoring suggested. The underlying xG of 1.77/match, down 29%, is the story.
+      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance; then the final match at Brentford (2.99 xG, 1 goal, 1–1) reversed much of it. The full-season gap settled at −0.11 — closer to the historical pattern than the late-season scoring suggested. The underlying xG of 1.77/match, down 29%, is the story.
     </p>
     <p class="table-note">
-      Gap = Goals/match minus xG/match. Slot Y2: 38 of 38 matches — season complete.
-      xG data: Understat (full seasons). PPG: official PL record (38 matches each). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the best figure in each column.
+      Gap = Goals/match minus xG/match; a small negative gap means goals just below xG (normal finishing), a large negative gap is the signature of bad luck. Slot Y2: 38 of 38 matches — season complete.
+      xG data: Understat (full seasons). PPG: official PL record (38 matches each). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the strongest figure in each column — highest for attacking metrics, lowest for opponent xG.
     </p>
   </section>
 
@@ -123,13 +123,13 @@ permalink: /liverpool/decline/
     <h2>These changes are real, not noise.</h2>
     <p class="section-intro">
       The xG picture above comes from Understat. The following comes from a second, independent dataset —
-      SportsMonks match statistics, full Premier League seasons (Klopp 38 matches, Y2 38 matches — season complete).
+      SportsMonks match statistics across full Premier League seasons.
       Mann-Whitney U with Bonferroni correction across 44 metrics (α/44 ≈ 0.00114).
       Everything below survived that threshold.
     </p>
     <div class="confirmed-grid">
       <div class="confirmed-card">
-        <div class="c-label">Ball Safe</div>
+        <div class="c-label">Ball Safe (secure possession)</div>
         <div class="c-value">−13.9%</div>
         <div class="c-meta">Cohen's d = 1.06 — very large effect</div>
       </div>
@@ -176,7 +176,7 @@ permalink: /liverpool/decline/
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a> —
+      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a>,
       data analyst. Independent project, no affiliation with Liverpool FC or any data provider.
       Full methodology at <a href="{{ '/methodology/' | relative_url }}">methodology →</a> ·
       Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.

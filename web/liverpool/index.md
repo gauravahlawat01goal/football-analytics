@@ -9,7 +9,7 @@ permalink: /liverpool/
   <div class="badge">Liverpool FC · Three Seasons</div>
   <h1>Liverpool FC<br><span style="color:var(--red)">Three seasons of data.</span></h1>
   <p class="hero-sub-headline">Klopp's final year. Slot's first two. What changed, what declined, and what the numbers say.</p>
-  <p class="subtitle">An independent statistical analysis using SportsMonks match data, Understat per-shot xG, and FBRef pressing metrics. Full season — 38 matches per season, all three seasons complete.</p>
+  <p class="subtitle">An independent statistical analysis using SportsMonks match statistics and Understat per-shot xG across 114 fixtures.</p>
 </header>
 
 <main>
@@ -67,10 +67,10 @@ permalink: /liverpool/
       </div>
       <div class="finding-item">
         <div class="finding-label">Set-piece xG halved</div>
-        <div class="finding-detail">0.679 → 0.487 → 0.339 per match (first 30 Y2 matches, Understat shot-level data). Consistent with the impact of Trent Alexander-Arnold's departure.</div>
+        <div class="finding-detail">0.679 → 0.487 → 0.339 per match (first 30 Y2 matches, Understat shot-level data). The decline began in Y1 while Trent Alexander-Arnold was still at the club and continued after his departure.</div>
       </div>
       <div class="finding-item">
-        <div class="finding-label">Pressing collapsed</div>
+        <div class="finding-label">Tackling and pressing intensity declined</div>
         <div class="finding-detail">Tackles/match: 17.8 → 13.0 (−27.0%). Bonferroni-confirmed across 44 metrics.</div>
       </div>
       <div class="finding-item">
@@ -87,7 +87,7 @@ permalink: /liverpool/
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a> —
+      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a>,
       data analyst. Independent project, no affiliation with Liverpool FC.
       Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.
     </p>

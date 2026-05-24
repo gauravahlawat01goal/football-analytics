@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Football Analytics | Gaurav Ahlawat"
-description: "Data-driven football analysis. Liverpool FC three-season study — xG, pressing, set pieces, game state. More clubs to follow."
+description: "Data-driven football analysis. Liverpool FC three-season study — xG, pressing, set pieces, game state."
 ---
 
 <header>
@@ -15,15 +15,15 @@ description: "Data-driven football analysis. Liverpool FC three-season study —
 
   <!-- ── Featured project ── -->
   <section>
-    <div class="section-label">Current project</div>
+    <div class="section-label">Featured project</div>
     <h2>Liverpool FC — three seasons of data.</h2>
     <p class="section-intro">
-      How did a title-winning side regress? The analysis spans Klopp's final season (2023–24) and Slot's first two campaigns, using SportsMonks match statistics and Understat per-shot xG across 101 fixtures.
+      How did the reigning champions regress so sharply? The analysis spans Slot's title-winning first season, his troubled second, and Klopp's final year as the baseline — using SportsMonks match statistics and Understat per-shot xG across 114 fixtures.
     </p>
 
     <div class="featured-card">
       <div class="featured-card-content">
-        <div class="featured-eyebrow">Slot Y2 · Season complete · 38 matches · May 2026</div>
+        <div class="featured-eyebrow">Slot Y2 2025–26 · Season complete</div>
         <h3>Something broke in year two.</h3>
         <p>xG/match fell 29% from Klopp (2.49 → 1.77). Shot volume declined. Shot quality declined. Set-piece xG halved. Two independent datasets point to the same conclusion.</p>
         <div class="featured-stats">
@@ -39,7 +39,7 @@ description: "Data-driven football analysis. Liverpool FC three-season study —
   <!-- ── Published threads ── -->
   <section>
     <div class="section-label">Published</div>
-    <h2>The thread series.</h2>
+    <h2>Published analysis.</h2>
     <div class="thread-list">
       {% assign sorted_posts = site.posts | sort: 'thread_num' %}
       {% for post in sorted_posts %}
@@ -58,7 +58,7 @@ description: "Data-driven football analysis. Liverpool FC three-season study —
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a> —
+      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a>,
       data analyst. Liverpool FC is the first project in an ongoing series covering the Premier League,
       Bundesliga, La Liga, and Serie A.
       Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.

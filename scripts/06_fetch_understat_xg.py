@@ -24,63 +24,45 @@ from understatapi import UnderstatClient
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
-# Liverpool's Understat team_id / slug
-LIVERPOOL_SLUG = "Liverpool"
-
-# Map our season labels to Understat's year parameter (start year)
-SEASONS = {
-    "2023-24": "2023",
-    "2024-25": "2024",
-    "2025-26": "2025",
-}
-
-# Map Klopp / Slot by season
-MANAGER_MAP = {
-    "2023-24": "Klopp",
-    "2024-25": "Slot",
-    "2025-26": "Slot",
-}
-
 PROCESSED_DIR = Path("data/processed")
 OUT_DIR = PROCESSED_DIR / "understat"
 
 
-def fetch_match_xg(client: UnderstatClient) -> pd.DataFrame:
-    """Fetch per-match xG for Liverpool across all 3 seasons."""
+def fetch_match_xg(client: UnderstatClient, team_slug_url: str, seasons: list) -> pd.DataFrame:
+    """Fetch per-match xG for a given team and seasons."""
     rows = []
-    for season_label, understat_year in SEASONS.items():
-        log.info("Fetching match xG for %s (Understat year=%s)...", season_label, understat_year)
+    for understat_year in seasons:
+        log.info("Fetching match xG for %s (Understat year=%s)...", team_slug_url, understat_year)
         try:
-            matches = client.team(LIVERPOOL_SLUG).get_match_data(season=understat_year)
+            matches = client.team(team_slug_url).get_match_data(season=str(understat_year))
         except Exception as exc:
-            log.error("Failed to fetch %s: %s", season_label, exc)
+            log.error("Failed to fetch %s for %s: %s", team_slug_url, understat_year, exc)
             continue
 
         for m in matches:
             if not m.get("isResult"):
                 continue  # skip future fixtures
 
-            lfc_side = m["side"]  # 'h' or 'a'
-            opp_side = "a" if lfc_side == "h" else "h"
+            team_side = m["side"]  # 'h' or 'a'
+            opp_side = "a" if team_side == "h" else "h"
 
             rows.append(
                 {
                     "understat_match_id": m["id"],
-                    "season": season_label,
-                    "manager": MANAGER_MAP[season_label],
+                    "season": str(understat_year),
                     "date": m["datetime"],
-                    "lfc_side": lfc_side,
+                    "team_side": team_side,
                     "home_team": m["h"]["title"],
                     "away_team": m["a"]["title"],
-                    "lfc_goals": int(m["goals"][lfc_side]),
+                    "team_goals": int(m["goals"][team_side]),
                     "opp_goals": int(m["goals"][opp_side]),
-                    "lfc_xg": float(m["xG"][lfc_side]),
+                    "team_xg": float(m["xG"][team_side]),
                     "opp_xg": float(m["xG"][opp_side]),
-                    "result": m["result"],  # 'w', 'd', 'l' from Liverpool's perspective
+                    "result": m["result"],  # 'w', 'd', 'l' from team's perspective
                 }
             )
 
-        log.info("  %d completed matches for %s", sum(1 for m in matches if m.get("isResult")), season_label)
+        log.info("  %d completed matches for %s", sum(1 for m in matches if m.get("isResult")), understat_year)
         time.sleep(1.0)  # polite rate limiting
 
     return pd.DataFrame(rows)
@@ -109,16 +91,15 @@ def fetch_shots(
             log.warning("  Skipping match %s: %s", match_id, exc)
             continue
 
-        lfc_side = row["lfc_side"]
-        lfc_shots = shot_data.get(lfc_side, [])
+        team_side = row["team_side"]
+        team_shots = shot_data.get(team_side, [])
 
-        for s in lfc_shots:
+        for s in team_shots:
             all_shots.append(
                 {
                     "understat_shot_id": s["id"],
                     "understat_match_id": match_id,
                     "season": row["season"],
-                    "manager": row["manager"],
                     "date": row["date"],
                     "minute": int(s["minute"]),
                     "player": s["player"],
@@ -140,7 +121,9 @@ def fetch_shots(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Fetch Understat xG data for Liverpool")
+    parser = argparse.ArgumentParser(description="Fetch Understat xG data")
+    parser.add_argument("--team-slug", type=str, required=True, help="'Liverpool' or 'Bayer Leverkusen'")
+    parser.add_argument("--seasons", type=int, nargs="+", required=True, help="Start years, e.g. 2023 2024")
     parser.add_argument(
         "--force-refresh",
         action="store_true",
@@ -148,26 +131,33 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    # Enforce Understat URL formatting standards
+    team_slug_url = args.team_slug.replace(" ", "_")
+    safe_team_name = args.team_slug.lower().replace(" ", "_")
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    match_path = OUT_DIR / "match_xg.csv"
-    shots_path = OUT_DIR / "shots.csv"
+    match_path = OUT_DIR / f"{safe_team_name}_match_xg.csv"
+    shots_path = OUT_DIR / f"{safe_team_name}_shots.csv"
 
     client = UnderstatClient()
 
     # --- Match-level xG ---
     if match_path.exists() and not args.force_refresh:
-        log.info("match_xg.csv already exists — skipping. Use --force-refresh to re-fetch.")
+        log.info("%s already exists — skipping. Use --force-refresh to re-fetch.", match_path.name)
         match_df = pd.read_csv(match_path)
     else:
-        match_df = fetch_match_xg(client)
+        match_df = fetch_match_xg(client, team_slug_url, args.seasons)
+        if match_df.empty:
+            log.warning("No matches found for %s in %s", team_slug_url, args.seasons)
+            return
         match_df.to_csv(match_path, index=False)
         log.info("Saved %d rows to %s", len(match_df), match_path)
 
-    log.info("Match xG summary:\n%s", match_df.groupby("season")[["lfc_xg", "opp_xg", "lfc_goals", "opp_goals"]].mean().round(2))
+    log.info("Match xG summary:\n%s", match_df.groupby("season")[["team_xg", "opp_xg", "team_goals", "opp_goals"]].mean().round(2))
 
     # --- Shot-level data ---
     if shots_path.exists() and not args.force_refresh:
-        log.info("shots.csv already exists — skipping. Use --force-refresh to re-fetch.")
+        log.info("%s already exists — skipping. Use --force-refresh to re-fetch.", shots_path.name)
     else:
         shots_df = fetch_shots(client, match_df)
         shots_df.to_csv(shots_path, index=False)

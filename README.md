@@ -16,7 +16,8 @@ Data-driven analysis of Liverpool FC's tactical evolution across three seasons �
 |-------|--------|
 | Data collection (114 fixtures, 7 includes each) | ✅ Complete |
 | Data processing pipeline | ✅ Complete |
-| Understat Tier 2 (xG) + FBRef Tier 3 (PPDA) | ✅ Integrated |
+| Understat Tier 2 (xG) | ✅ Complete |
+| FBRef Tier 3 (PPDA) | ⏳ Script written — integration pending |
 | Statistical comparison + ball zone presence | ✅ Complete |
 | Game-state tactical shifts | ✅ Complete |
 | Analysis scripts 01–06 — 26 PNG charts generated | ✅ Complete |
@@ -109,7 +110,7 @@ football-analytics/
 
 ## Data
 
-**101 fixtures processed** across three seasons:
+**114 fixtures processed** across three seasons:
 
 | Season | Manager | Fixtures | Notes |
 |--------|---------|----------|-------|

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Something broke in year two | Liverpool FC Analysis"
-description: "Three seasons of data on Liverpool FC's decline — 37 matches, 1,924 shots. xG fell 30%, PPG fell from 2.16 to 1.59. The numbers show where it broke."
+description: "Three seasons of data on Liverpool FC's decline — full season, 38 matches. xG fell 29%, PPG fell from 2.16 to 1.58. The numbers show where it broke."
 permalink: /liverpool/decline/
 ---
 
@@ -25,19 +25,19 @@ permalink: /liverpool/decline/
 
     <div class="hero-stat-block">
       <div class="hero-stat-number">
-        <span class="big">1.74</span>
+        <span class="big">1.77</span>
         <span class="unit">xG per match · Slot Y2 2025–26</span>
       </div>
       <div class="hero-stat-text">
-        <div class="hero-delta">↓ 30% from Klopp (2.49) · ↓ 29% from Slot Y1 (2.45)</div>
-        <h3>Liverpool's attacking xG fell 30% — observed across 37 matches</h3>
+        <div class="hero-delta">↓ 29% from Klopp (2.49) · ↓ 28% from Slot Y1 (2.45)</div>
+        <h3>Liverpool's attacking xG fell 29% — full season, 38 matches</h3>
       </div>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
         <div class="label">Points per game — Slot Y2</div>
-        <div class="value" style="color:var(--red)">1.59</div>
+        <div class="value" style="color:var(--red)">1.58</div>
         <div class="delta down">↓ from 2.16 (Klopp) and 2.21 (Slot Y1)</div>
       </div>
       <div class="stat-card">
@@ -97,10 +97,10 @@ permalink: /liverpool/decline/
           </tr>
           <tr class="row-y2">
             <td><span class="season-tag y2">Slot Y2 25–26 †</span></td>
-            <td class="text-red">1.59</td>
-            <td class="text-red">1.74</td>
-            <td class="text-red">1.68</td>
-            <td class="col-gap">−0.06</td>
+            <td class="text-red">1.58</td>
+            <td class="text-red">1.77</td>
+            <td class="text-red">1.66</td>
+            <td class="col-gap">−0.11</td>
             <td class="text-red">0.118</td>
             <td class="text-red">0.339</td>
             <td class="text-red">1.42</td>
@@ -109,11 +109,11 @@ permalink: /liverpool/decline/
       </table>
     </div>
     <p class="gap-insight">
-      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. The final seven games saw unusual overperformance (+0.57), pulling the full-season gap to −0.06. Those late goals were real; the chance quality that produced them (1.74 xG/match, down 30% from Klopp) was not.
+      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance, briefly pulling the gap to −0.06. The final match — Liverpool created 2.99 xG at Brentford but scored once — pulled it back to −0.11. The season ended closer to the historical pattern than those seven games suggested.
     </p>
     <p class="table-note">
-      Gap = Goals/match minus xG/match. † Slot Y2: 37 of 38 matches played (one match remaining).
-      xG data: Understat (full seasons). PPG: official PL record (38 matches for Klopp/Y1; 37/38 for Y2). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the best figure in each column.
+      Gap = Goals/match minus xG/match. Slot Y2: 38 of 38 matches — season complete.
+      xG data: Understat (full seasons). PPG: official PL record (38 matches each). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the best figure in each column.
     </p>
   </section>
 
@@ -130,23 +130,23 @@ permalink: /liverpool/decline/
     <div class="confirmed-grid">
       <div class="confirmed-card">
         <div class="c-label">Ball Safe</div>
-        <div class="c-value">−13.4%</div>
-        <div class="c-meta">Cohen's d = 1.03 — very large effect</div>
+        <div class="c-value">−13.9%</div>
+        <div class="c-meta">Cohen's d = 1.06 — very large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Shots on target</div>
-        <div class="c-value">−38.1%</div>
-        <div class="c-meta">Cohen's d = 0.94 — large effect</div>
+        <div class="c-value">−36.8%</div>
+        <div class="c-meta">Cohen's d = 0.90 — large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Goal attempts</div>
-        <div class="c-value">−30.5%</div>
-        <div class="c-meta">Cohen's d = 0.92 — large effect</div>
+        <div class="c-value">−29.5%</div>
+        <div class="c-meta">Cohen's d = 0.89 — large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Tackles / match</div>
-        <div class="c-value">−27.3%</div>
-        <div class="c-meta">17.8 → 12.9 per match · d = 0.93</div>
+        <div class="c-value">−27.0%</div>
+        <div class="c-meta">17.8 → 13.0 per match · d = 0.93</div>
       </div>
     </div>
   </section>

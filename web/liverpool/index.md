@@ -26,10 +26,10 @@ permalink: /liverpool/
       <div class="featured-card-content">
         <div class="featured-eyebrow">Slot Y2 2025–26 · 37 matches</div>
         <h3>The numbers behind Liverpool's decline</h3>
-        <p>xG/match fell 30% from Klopp (2.49 → 1.74). Both shot volume and shot quality declined simultaneously. The evidence points upstream of the finishing.</p>
+        <p>xG/match fell 29% from Klopp (2.49 → 1.77). Both shot volume and shot quality declined simultaneously. The evidence points upstream of the finishing.</p>
         <div class="featured-stats">
-          <span>1.74 xG/match</span>
-          <span>1.59 PPG</span>
+          <span>1.77 xG/match</span>
+          <span>1.58 PPG</span>
           <span>−50% set-piece xG</span>
         </div>
       </div>
@@ -62,8 +62,8 @@ permalink: /liverpool/
     <h2>What the data established.</h2>
     <div class="findings-list">
       <div class="finding-item">
-        <div class="finding-label">Attacking xG fell 30%</div>
-        <div class="finding-detail">2.49 (Klopp) → 2.45 (Y1) → 1.74 (Y2) per match. Observed across 37 matches via Understat.</div>
+        <div class="finding-label">Attacking xG fell 29%</div>
+        <div class="finding-detail">2.49 (Klopp) → 2.45 (Y1) → 1.77 (Y2) per match. Observed across 38 matches (full season) via Understat.</div>
       </div>
       <div class="finding-item">
         <div class="finding-label">Set-piece xG halved</div>

@@ -86,12 +86,12 @@ Attack and defence regressed simultaneously. The 1.59 PPG — down from 2.16 und
 
 ## What independent data confirms
 
-The xG story is reinforced by a separate dataset: SportsMonks match statistics, full Premier League seasons (38 Klopp matches, 37 Y2 matches). Tested with Mann-Whitney U and Bonferroni correction across 44 metrics (α/44 ≈ 0.00114). The following survived that threshold when comparing Klopp's 2023–24 season to Slot Y2:
+The xG story is reinforced by a separate dataset: SportsMonks match statistics, full Premier League seasons (38 Klopp matches, 38 Y2 matches — season complete). Tested with Mann-Whitney U and Bonferroni correction across 44 metrics (α/44 ≈ 0.00114). The following survived that threshold when comparing Klopp's 2023–24 season to Slot Y2:
 
-- **Ball Safe: −13.4%** (Cohen's d = 1.03 — very large effect)
-- **Shots on target: −38.1%** (Cohen's d = 0.94 — large effect)
-- **Goal attempts: −30.5%** (Cohen's d = 0.92 — large effect)
-- **Tackles per match: −27.3%** (17.8 → 12.9 per match, Cohen's d = 0.93 — large effect)
+- **Ball Safe: −13.9%** (Cohen's d = 1.06 — very large effect)
+- **Shots on target: −36.8%** (Cohen's d = 0.90 — large effect)
+- **Goal attempts: −29.5%** (Cohen's d = 0.89 — large effect)
+- **Tackles per match: −27.0%** (17.8 → 13.0 per match, Cohen's d = 0.93 — large effect)
 
 These are not marginal signals. They are large, consistent, and robust to correction. The press is less intense. The shots are fewer. The quality is lower. The results follow.
 
@@ -110,6 +110,6 @@ You weren't imagining it.
 ---
 
 <div class="post-footer-note">
-  <p><strong>Data:</strong> Understat (xG figures, 37 Y2 matches) and SportsMonks API v3 (match statistics). Slot Y2: 37 of 38 matches played — one fixture remaining (Brentford, May 24). xG/shot and set-piece figures based on first 30 matches of Y2; full-season shot-level data pending. Y1-vs-Y2 comparisons are directional signals only; Klopp-vs-Y2 comparisons are statistically confirmed with Bonferroni correction.</p>
+  <p><strong>Data:</strong> Understat (xG figures, full 38-match Y2 season) and SportsMonks API v3 (match statistics, full season). Season complete. xG/shot and set-piece figures based on first 30 matches of Y2 (shot-level pull). Y1-vs-Y2 comparisons are directional signals only; Klopp-vs-Y2 comparisons are statistically confirmed with Bonferroni correction.</p>
   <p><a href="https://github.com/gauravahlawat01goal/football-analytics">Full methodology and analysis code →</a></p>
 </div>

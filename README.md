@@ -29,14 +29,14 @@ See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full ph
 
 ---
 
-## Key Findings (Updated May 2026 — 37/38 Y2 matches)
+## Key Findings (Final — full 38-match Y2 season)
 
-- **PPG regressed**: 2.16 (Klopp) → 2.21 (Slot Y1, title winners) → 1.59 (Slot Y2, 37 matches)
-- **Attacking xG fell 30%**: 2.49 → 2.45 → 1.74 xG/match — observed across 37 matches via Understat
+- **PPG regressed**: 2.16 (Klopp) → 2.21 (Slot Y1, title winners) → 1.58 (Slot Y2, 17W-9D-12L)
+- **Attacking xG fell 29%**: 2.49 → 2.45 → 1.77 xG/match — full 38-match season, Understat
 - **Both levers broke in Y2**: shot volume fell (20.8→15.5/match) AND xG/shot fell (0.146→0.118) — no compensating factor
 - **Set-piece xG halved**: 0.679 → 0.487 → 0.339/match — consistent with Trent Alexander-Arnold's departure
 - **Defence also declined**: opponent xG 1.25 → 1.11 → 1.42/match
-- **Confirmed** (Mann-Whitney U, Bonferroni α/44, Klopp 38 matches vs Slot Y2 37 matches): Ball Safe −13.4% (d=1.03), Shots On Target −38.1% (d=0.94), Goal Attempts −30.5% (d=0.92), Tackles −27.3% (d=0.93)
+- **Confirmed** (Mann-Whitney U, Bonferroni α/44, full 38-match seasons): Ball Safe −13.9% (d=1.06), Shots On Target −36.8% (d=0.90), Goal Attempts −29.5% (d=0.89), Tackles −27.0% (d=0.93)
 - **Formation shifted**: 4-3-3 → 4-2-3-1; right-side attacking collapsed (R-to-L ratio: 1.47 → 0.90)
 - **Deadlock problem**: Y2 scores 0.73 go-ahead goals/match from level, vs 0.97 (Klopp/Y1)
 

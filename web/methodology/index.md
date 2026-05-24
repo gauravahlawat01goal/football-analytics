@@ -48,11 +48,11 @@ permalink: /methodology/
     <div class="method-box">
       <p>
         <strong>Confirmatory analysis</strong> (Klopp 2023–24 vs Slot Y2 2025–26): Mann-Whitney U tests
-        with Bonferroni correction across all 44 statistical metrics. Mann-Whitney U is a non-parametric
-        rank-based test — appropriate for match statistics, which are bounded and often skewed.
-        The Bonferroni threshold (α/44 ≈ 0.00114) is the most conservative multiple-comparison
-        correction available. Only findings that survive this threshold are reported as
-        <strong>confirmed</strong>.
+        with Bonferroni correction across a family of 44 statistical metrics (α/44 ≈ 0.00114).
+        Mann-Whitney U is a non-parametric rank-based test — appropriate for match statistics, which
+        are bounded and often skewed. The original notebook analysis used Welch's t-test; the confirmed
+        findings below hold under both approaches. Only findings that survive the Bonferroni threshold
+        are reported as <strong>confirmed</strong>. Full-season data used: 38 Klopp matches, 37 Y2 matches.
       </p>
       <p>
         <strong>Exploratory analysis</strong> (Slot Y1 vs Y2): Y2 is a near-complete season — 37 of 38
@@ -63,7 +63,7 @@ permalink: /methodology/
       <p>
         <strong>Effect sizes</strong>: All findings include Cohen's d (standardised mean difference).
         d = 0.2 is small, d = 0.5 is medium, d = 0.8 is large. The confirmed findings range from
-        d = 0.86 to d = 1.11 — large to very large effects.
+        d = 0.92 to d = 1.03 — large to very large effects.
       </p>
       <p>
         <strong>House style</strong>: <em>Observed</em> = descriptive data trend from a single source.
@@ -83,28 +83,23 @@ permalink: /methodology/
     <div class="confirmed-grid">
       <div class="confirmed-card">
         <div class="c-label">Ball Safe</div>
-        <div class="c-value">−13.5%</div>
-        <div class="c-meta">Cohen's d = 1.11 — very large effect</div>
-      </div>
-      <div class="confirmed-card">
-        <div class="c-label">Shots outside box</div>
-        <div class="c-value">−38.6%</div>
-        <div class="c-meta">Cohen's d = 0.93 — large effect</div>
+        <div class="c-value">−13.4%</div>
+        <div class="c-meta">Cohen's d = 1.03 — very large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Shots on target</div>
-        <div class="c-value">−37.2%</div>
-        <div class="c-meta">Cohen's d = 0.88 — large effect</div>
+        <div class="c-value">−38.1%</div>
+        <div class="c-meta">Cohen's d = 0.94 — large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Goal attempts</div>
-        <div class="c-value">−29.3%</div>
-        <div class="c-meta">Cohen's d = 0.87 — large effect</div>
+        <div class="c-value">−30.5%</div>
+        <div class="c-meta">Cohen's d = 0.92 — large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Tackles / match</div>
-        <div class="c-value">−25.7%</div>
-        <div class="c-meta">17.9 → 13.3 per match · d = 0.86</div>
+        <div class="c-value">−27.3%</div>
+        <div class="c-meta">17.8 → 12.9 per match · d = 0.93</div>
       </div>
     </div>
   </section>

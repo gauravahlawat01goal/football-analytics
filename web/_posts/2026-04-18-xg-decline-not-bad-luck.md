@@ -82,17 +82,16 @@ One mitigating factor from Slot's first season deserves credit: the defence. Liv
 
 Opponent xG/match: 1.25 (Klopp) → 1.11 (Slot Y1) → **1.42** (Slot Y2, 37 matches).
 
-Attack and defence regressed simultaneously. The 1.59 PPG — down from 2.14 under Klopp and 2.12 in Y1 — is not a cluster of near misses. It is the predictable arithmetic of creating fewer, worse chances, while allowing more of them at the other end.
+Attack and defence regressed simultaneously. The 1.59 PPG — down from 2.16 under Klopp and 2.21 in Y1 — is not a cluster of near misses. It is the predictable arithmetic of creating fewer, worse chances, while allowing more of them at the other end.
 
 ## What independent data confirms
 
-The xG story is reinforced by a separate dataset: SportsMonks match statistics across 101 processed fixtures. These are tested with Mann-Whitney U tests and Bonferroni correction across 44 metrics — the most conservative multiple-comparison adjustment available. The following survived that threshold when comparing Klopp's 2023–24 season to Slot Y2:
+The xG story is reinforced by a separate dataset: SportsMonks match statistics, full Premier League seasons (38 Klopp matches, 37 Y2 matches). Tested with Mann-Whitney U and Bonferroni correction across 44 metrics (α/44 ≈ 0.00114). The following survived that threshold when comparing Klopp's 2023–24 season to Slot Y2:
 
-- **Ball Safe: −13.5%** (Cohen's d = 1.11 — very large effect)
-- **Shots outside box: −38.6%** (Cohen's d = 0.93 — large effect)
-- **Shots on target: −37.2%** (Cohen's d = 0.88 — large effect)
-- **Goal attempts: −29.3%** (Cohen's d = 0.87 — large effect)
-- **Tackles per match: −25.7%** (17.9 → 13.3 per match, Cohen's d = 0.86 — large effect)
+- **Ball Safe: −13.4%** (Cohen's d = 1.03 — very large effect)
+- **Shots on target: −38.1%** (Cohen's d = 0.94 — large effect)
+- **Goal attempts: −30.5%** (Cohen's d = 0.92 — large effect)
+- **Tackles per match: −27.3%** (17.8 → 12.9 per match, Cohen's d = 0.93 — large effect)
 
 These are not marginal signals. They are large, consistent, and robust to correction. The press is less intense. The shots are fewer. The quality is lower. The results follow.
 

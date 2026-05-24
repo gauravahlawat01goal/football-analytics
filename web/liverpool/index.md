@@ -71,7 +71,7 @@ permalink: /liverpool/
       </div>
       <div class="finding-item">
         <div class="finding-label">Pressing collapsed</div>
-        <div class="finding-detail">Tackles/match: 17.9 → 13.3 (−26%). Bonferroni-confirmed across 44 metrics.</div>
+        <div class="finding-detail">Tackles/match: 17.8 → 12.9 (−27.3%). Bonferroni-confirmed across 44 metrics.</div>
       </div>
       <div class="finding-item">
         <div class="finding-label">Defence also declined</div>

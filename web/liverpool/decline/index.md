@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Something broke in year two | Liverpool FC Analysis"
-description: "Three seasons of data on Liverpool FC's decline — 37 matches, 1,924 shots. xG fell 30%, PPG fell from 2.14 to 1.59. The numbers show where it broke."
+description: "Three seasons of data on Liverpool FC's decline — 37 matches, 1,924 shots. xG fell 30%, PPG fell from 2.16 to 1.59. The numbers show where it broke."
 permalink: /liverpool/decline/
 ---
 
@@ -38,7 +38,7 @@ permalink: /liverpool/decline/
       <div class="stat-card">
         <div class="label">Points per game — Slot Y2</div>
         <div class="value" style="color:var(--red)">1.59</div>
-        <div class="delta down">↓ from 2.14 (Klopp) and 2.12 (Slot Y1)</div>
+        <div class="delta down">↓ from 2.16 (Klopp) and 2.21 (Slot Y1)</div>
       </div>
       <div class="stat-card">
         <div class="label">Set-piece xG / match</div>
@@ -77,7 +77,7 @@ permalink: /liverpool/decline/
         <tbody>
           <tr>
             <td><span class="season-tag klopp">Klopp 23–24</span></td>
-            <td>2.14</td>
+            <td>2.16</td>
             <td>2.49</td>
             <td>2.26</td>
             <td class="col-gap">−0.23</td>
@@ -87,7 +87,7 @@ permalink: /liverpool/decline/
           </tr>
           <tr>
             <td><span class="season-tag y1">Slot Y1 24–25</span></td>
-            <td>2.12</td>
+            <td>2.21</td>
             <td>2.45</td>
             <td>2.26</td>
             <td class="col-gap">−0.19</td>
@@ -113,7 +113,7 @@ permalink: /liverpool/decline/
     </p>
     <p class="table-note">
       Gap = Goals/match minus xG/match. † Slot Y2: 37 of 38 matches played (one match remaining).
-      xG data: Understat. PPG: SportsMonks. xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the best figure in each column.
+      xG data: Understat (full seasons). PPG: official PL record (38 matches for Klopp/Y1; 37/38 for Y2). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the best figure in each column.
     </p>
   </section>
 
@@ -123,29 +123,30 @@ permalink: /liverpool/decline/
     <h2>These changes are real, not noise.</h2>
     <p class="section-intro">
       The xG picture above comes from Understat. The following comes from a second, independent dataset —
-      SportsMonks match statistics across 101 fixtures. Tested with Mann-Whitney U and Bonferroni correction
-      across all 44 metrics. Everything below survived the most conservative multiple-comparison threshold.
+      SportsMonks match statistics, full Premier League seasons (Klopp 38 matches, Y2 37 matches).
+      Mann-Whitney U with Bonferroni correction across 44 metrics (α/44 ≈ 0.00114).
+      Everything below survived that threshold.
     </p>
     <div class="confirmed-grid">
       <div class="confirmed-card">
         <div class="c-label">Ball Safe</div>
-        <div class="c-value">−13.5%</div>
-        <div class="c-meta">Cohen's d = 1.11 — very large effect</div>
+        <div class="c-value">−13.4%</div>
+        <div class="c-meta">Cohen's d = 1.03 — very large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Shots on target</div>
-        <div class="c-value">−37.2%</div>
-        <div class="c-meta">Cohen's d = 0.88 — large effect</div>
+        <div class="c-value">−38.1%</div>
+        <div class="c-meta">Cohen's d = 0.94 — large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Goal attempts</div>
-        <div class="c-value">−29.3%</div>
-        <div class="c-meta">Cohen's d = 0.87 — large effect</div>
+        <div class="c-value">−30.5%</div>
+        <div class="c-meta">Cohen's d = 0.92 — large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Tackles / match</div>
-        <div class="c-value">−25.7%</div>
-        <div class="c-meta">17.9 → 13.3 per match</div>
+        <div class="c-value">−27.3%</div>
+        <div class="c-meta">17.8 → 12.9 per match · d = 0.93</div>
       </div>
     </div>
   </section>

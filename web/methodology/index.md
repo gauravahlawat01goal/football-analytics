@@ -26,7 +26,7 @@ permalink: /methodology/
       <div class="source-card">
         <div class="tier">Tier 2 · xG enrichment</div>
         <h4>Understat</h4>
-        <p>107 matches, 1,924 per-shot xG records with coordinates. Enables xG/match, xG/shot, and open-play vs set-piece breakdown. Shot-level data covers the first 30 Y2 matches; match-level xG updated to 37 matches.</p>
+        <p>107 matches, 1,924 per-shot xG records with coordinates. Enables xG/match, xG/shot, and open-play vs set-piece breakdown. Shot-level data covers the first 30 Y2 matches; match-level xG updated to 38 matches (full season).</p>
       </div>
       <div class="source-card">
         <div class="tier">Tier 3 · Pressing metrics</div>
@@ -55,8 +55,8 @@ permalink: /methodology/
         are reported as <strong>confirmed</strong>. Full-season data used: 38 Klopp matches, 38 Y2 matches (season complete).
       </p>
       <p>
-        <strong>Exploratory analysis</strong> (Slot Y1 vs Y2): Y2 is a near-complete season — 37 of 38
-        matches at time of publication. Y1-vs-Y2 comparisons report effect sizes and directional signals
+        <strong>Exploratory analysis</strong> (Slot Y1 vs Y2): Y2 is now a complete season — 38 of 38
+        matches played. Y1-vs-Y2 comparisons report effect sizes and directional signals
         only. These are clearly labelled as <strong>directional</strong>. Nominal p-values are noted
         but not treated as sufficient on their own.
       </p>
@@ -117,24 +117,21 @@ permalink: /methodology/
       </p>
       <p>
         <strong>No opponent adjustment.</strong> All metrics are raw — they do not adjust for opponent
-        strength. A tackles-per-match average of 13.3 means different things against different opposition.
+        strength. A tackles-per-match average of 13.0 means different things against different opposition.
         Opponent-adjusted metrics are planned but not yet complete.
       </p>
       <p>
-        <strong>Y2 sample.</strong> Slot Y2 figures are based on 37 of 38 matches (one fixture remaining —
-        Brentford away, May 24). xG/shot and set-piece xG are from the original 30-match Understat pull;
-        match-level xG has been updated to 37 matches. All Y2 figures will be refreshed after the season
-        concludes.
+        <strong>Y2 sample.</strong> Slot Y2 is a complete season — 38 of 38 matches played (final match: Brentford away, May 24, 1–1). Match-level xG covers all 38 matches. xG/shot and set-piece xG are from the original 30-match Understat shot-level pull and are labelled accordingly.
       </p>
       <p>
         <strong>Mixed shot-level sample.</strong> The shot volume (15.5/match) and xG/shot (0.118) figures
-        come from the first 30 matches of Y2. The final seven matches showed higher goals-per-match (2.0)
-        through significant finishing overperformance (+0.57 gap) — not an improvement in underlying chance
-        quality. These two samples are clearly distinguished throughout the analysis.
+        come from the first 30 matches of Y2 (original Understat shot-level pull). Match-level xG covers
+        all 38 matches. These two samples are clearly distinguished throughout the analysis wherever
+        shot-level figures appear.
       </p>
     </div>
     <div class="caveat-box">
-      Slot Y2: 37 of 38 matches played. Match-level xG updated to 37 matches via Understat.
+      Slot Y2: season complete — 38 of 38 matches. Match-level xG covers all 38 matches via Understat.
       Shot-level breakdowns (xG/shot, set-piece xG) based on first 30-match pull and labelled accordingly.
     </div>
   </section>

@@ -23,7 +23,7 @@ description: "Data-driven football analysis. Liverpool FC three-season study —
 
     <div class="featured-card">
       <div class="featured-card-content">
-        <div class="featured-eyebrow">Slot Y2 · 37 of 38 matches · Updated May 2026</div>
+        <div class="featured-eyebrow">Slot Y2 · Season complete · 38 matches · May 2026</div>
         <h3>Something broke in year two.</h3>
         <p>xG/match fell 29% from Klopp (2.49 → 1.77). Shot volume declined. Shot quality declined. Set-piece xG halved. Two independent datasets point to the same conclusion.</p>
         <div class="featured-stats">

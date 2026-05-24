@@ -22,7 +22,7 @@ Data-driven analysis of Liverpool FC's tactical evolution across three seasons �
 | Analysis scripts 01–06 — 26 PNG charts generated | ✅ Complete |
 | GitHub Pages publication site | ✅ Live |
 | Thread 1: xG decline | ✅ Published |
-| Thread 2: The Trent Effect | ⏳ Drafted — publishing post season end (May 24) |
+| Thread 2: The Trent Effect | ⏳ Drafted — ready to publish (season complete) |
 | Remaining deep-dive analyses | ⏳ Planned |
 
 See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full phase breakdown and [`docs/status/DEEP_DIVE_PLAN.md`](docs/status/DEEP_DIVE_PLAN.md) for all 21 planned analyses.
@@ -115,7 +115,7 @@ football-analytics/
 |--------|---------|----------|-------|
 | 2023-24 | Klopp | 37 | Full season |
 | 2024-25 | Slot Y1 | 34 | Full season |
-| 2025-26 | Slot Y2 | 37 | 37 of 38 matches — one remaining (May 24) |
+| 2025-26 | Slot Y2 | 38 | Full season complete (38 of 38 matches) |
 
 Per fixture, six processed CSVs:
 

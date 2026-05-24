@@ -123,7 +123,7 @@ permalink: /liverpool/decline/
     <h2>These changes are real, not noise.</h2>
     <p class="section-intro">
       The xG picture above comes from Understat. The following comes from a second, independent dataset —
-      SportsMonks match statistics, full Premier League seasons (Klopp 38 matches, Y2 37 matches).
+      SportsMonks match statistics, full Premier League seasons (Klopp 38 matches, Y2 38 matches — season complete).
       Mann-Whitney U with Bonferroni correction across 44 metrics (α/44 ≈ 0.00114).
       Everything below survived that threshold.
     </p>

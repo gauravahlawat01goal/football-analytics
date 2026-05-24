@@ -9,7 +9,7 @@ permalink: /liverpool/
   <div class="badge">Liverpool FC · Three Seasons</div>
   <h1>Liverpool FC<br><span style="color:var(--red)">Three seasons of data.</span></h1>
   <p class="hero-sub-headline">Klopp's final year. Slot's first two. What changed, what declined, and what the numbers say.</p>
-  <p class="subtitle">An independent statistical analysis using SportsMonks match data, Understat per-shot xG, and FBRef pressing metrics. 101 processed fixtures. 37 Y2 matches tracked.</p>
+  <p class="subtitle">An independent statistical analysis using SportsMonks match data, Understat per-shot xG, and FBRef pressing metrics. Full season — 38 matches per season, all three seasons complete.</p>
 </header>
 
 <main>
@@ -24,7 +24,7 @@ permalink: /liverpool/
     </p>
     <div class="featured-card">
       <div class="featured-card-content">
-        <div class="featured-eyebrow">Slot Y2 2025–26 · 37 matches</div>
+        <div class="featured-eyebrow">Slot Y2 2025–26 · Season complete · 38 matches</div>
         <h3>The numbers behind Liverpool's decline</h3>
         <p>xG/match fell 29% from Klopp (2.49 → 1.77). Both shot volume and shot quality declined simultaneously. The evidence points upstream of the finishing.</p>
         <div class="featured-stats">
@@ -71,7 +71,7 @@ permalink: /liverpool/
       </div>
       <div class="finding-item">
         <div class="finding-label">Pressing collapsed</div>
-        <div class="finding-detail">Tackles/match: 17.8 → 12.9 (−27.3%). Bonferroni-confirmed across 44 metrics.</div>
+        <div class="finding-detail">Tackles/match: 17.8 → 13.0 (−27.0%). Bonferroni-confirmed across 44 metrics.</div>
       </div>
       <div class="finding-item">
         <div class="finding-label">Defence also declined</div>

@@ -1,13 +1,13 @@
 ---
 layout: post
 title: "Liverpool's xG decline isn't bad luck"
-date: 2026-05-18
+date: 2026-04-18
 thread_num: 1
 status: live
 status_label: "Live"
-data_source: "Understat · 1,924 shots · 107 matches"
-description: "Three seasons of shot data show Liverpool's attacking xG fell 30% in Slot Y2 — from 2.49 to 1.74 per match. The decline is visible before the finishing, not in it."
-excerpt: "Liverpool's attacking xG fell from 2.49 (Klopp) to 1.74 (Slot Y2) — a 30% drop that shows up in shot volume, shot quality, and set-piece output. The problem is upstream of the finishing."
+data_source: "Understat · full 38-match season · SportsMonks"
+description: "Three seasons of data show Liverpool's attacking xG fell 29% in Slot Y2 — from 2.49 to 1.77 per match. Full season, 38 matches. The decline is visible before the finishing, not in it."
+excerpt: "Liverpool's attacking xG fell from 2.49 (Klopp) to 1.77 (Slot Y2) — a 29% drop across the full 38-match season. Shot volume declined, shot quality declined, set-piece output halved. The problem starts before finishing."
 ---
 
 Ask most Liverpool fans what went wrong this season and they'll tell you the same thing: bad luck, near misses, posts, goalkeepers. The idea that the results don't reflect the performances. That things will turn.
@@ -24,12 +24,12 @@ Here is the full picture across all three seasons:
 |--------|-----------|---------------|-----|
 | Klopp 2023–24 | 2.49 | 2.26 | −0.23 |
 | Slot Y1 2024–25 | 2.45 | 2.26 | −0.19 |
-| Slot Y2 2025–26 | **1.74** | **1.68** | −0.06 |
+| Slot Y2 2025–26 | **1.77** | **1.66** | −0.11 |
 
-*Source: Understat. Slot Y2: 37 of 38 matches played.*
+*Source: Understat. Slot Y2: 38 of 38 matches — season complete.*
 
 <figure class="post-figure">
-  <img src="{{ '/assets/figures/xg_per_match.png' | relative_url }}" alt="xG per match by season: Klopp 2.49, Slot Y1 2.45, Slot Y2 1.74" />
+  <img src="{{ '/assets/figures/xg_per_match.png' | relative_url }}" alt="xG per match by season: Klopp 2.49, Slot Y1 2.45, Slot Y2 1.77" />
   <figcaption>xG per match across three seasons. The Y2 drop is the sharpest single-season change of the three.</figcaption>
 </figure>
 
@@ -37,16 +37,16 @@ The key is not just the xG column. It is the gap.
 
 ## The column that reframes the argument
 
-Most people will look at the xG/match column and feel the drop. 2.49 to 1.74. Thirty percent. That's the headline. But the column that matters most is the one nobody talks about first: **the gap**.
+Most people will look at the xG/match column and feel the drop. 2.49 to 1.77. Twenty-nine percent. That's the headline. But the column that matters most is the one nobody talks about first: **the gap**.
 
 Klopp: −0.23. Slot Y1: −0.19. Slot Y2 at 30 matches: −0.21.
 
 <div class="insight-callout">
   <div class="insight-label">The key insight</div>
-  <p>For the first 30 matches of Y2, Liverpool underperformed their xG by <strong>the same margin as every previous season</strong>. The finishing was no worse. The problem was upstream: fewer chances, and worse ones. The final seven games of the season then saw Liverpool significantly overperform their xG (+0.57 gap), pushing the full-season figure to −0.06. Those late goals were genuine — but they came against a backdrop of 1.74 xG/match, still 30% below Klopp's 2.49.</p>
+  <p>For the first 30 matches of Y2, Liverpool underperformed their xG by <strong>the same margin as every previous season</strong>. The finishing was no worse. The problem was upstream: fewer chances, and worse ones. Matches 31–37 saw an unusual run of overperformance (+0.57 gap across those seven games). Then the final match — 2.99 xG at Brentford, one goal scored — pulled the full-season gap back to −0.11. The late scoring was variance; the underlying xG of 1.77/match, down 29% from Klopp's 2.49, was not.</p>
 </div>
 
-The end-of-season finishing surge doesn't rescue the underlying story. xG/match at 1.74 is the lowest of the three seasons by a distance. Liverpool scored more goals than their chances deserved in the final weeks — that is variance, not recovery.
+The full-season gap of −0.11 sits closer to the historical −0.19 to −0.23 range than the brief mid-season overperformance suggested. xG/match at 1.77 is the lowest of the three seasons by a distance, and the final match confirmed it: when Liverpool created 2.99 xG and scored once, that was not an anomaly — it was the season in miniature.
 
 ## Both levers broke simultaneously
 
@@ -58,7 +58,7 @@ This is what makes Y2 different from Y1. Slot's first season made sense as a mod
 | Slot Y1 2024–25 | 17.1 | **0.146** |
 | Slot Y2 2025–26 | **15.5** | 0.118 |
 
-*Shots and xG/shot based on the first 30 matches of Y2 (original Understat shot-level pull). Match-level xG has been updated to 37 matches.*
+*Shots and xG/shot based on the first 30 matches of Y2 (shot-level pull). Match-level xG updated to 38 matches (full season).*
 
 Slot Y1 took fewer shots but made them count. The shots Liverpool did take were measurably higher quality — 0.146 xG per shot versus Klopp's 0.123. The total xG barely moved (2.45 vs 2.49), goals were identical (2.26/match), and a Premier League title followed. There was a coherent logic to it.
 
@@ -76,13 +76,15 @@ One part of the xG story is easier to isolate:
 
 Set-piece expected goals halved from the Klopp era to Y2. That is not a rounding error — it is roughly a third of a goal per match in expected value, gone. The decline began under Slot Y1 (−28% while Trent Alexander-Arnold was still at the club) and continued after his departure (−30% Y1→Y2). The precise contribution of each factor is the subject of Thread 02: The Trent Effect, Part 1.
 
+*Set-piece xG figures are from the first 30-match Understat shot-level pull; match-level xG is updated to the full 38 matches.*
+
 ## The defence held until it didn't
 
 One mitigating factor from Slot's first season deserves credit: the defence. Liverpool conceded an opponent xG of just 1.11 in Y1, the best of the three seasons, which cushioned the attacking efficiency shift. That buffer is gone in Y2.
 
-Opponent xG/match: 1.25 (Klopp) → 1.11 (Slot Y1) → **1.42** (Slot Y2, 37 matches).
+Opponent xG/match: 1.25 (Klopp) → 1.11 (Slot Y1) → **1.42** (Slot Y2, 38 matches — season complete).
 
-Attack and defence regressed simultaneously. The 1.59 PPG — down from 2.16 under Klopp and 2.21 in Y1 — is not a cluster of near misses. It is the predictable arithmetic of creating fewer, worse chances, while allowing more of them at the other end.
+Attack and defence regressed simultaneously. The 1.58 PPG — down from 2.16 under Klopp and 2.21 in Y1 — is not a cluster of near misses. It is the predictable arithmetic of creating fewer, worse chances, while allowing more of them at the other end.
 
 ## What independent data confirms
 
@@ -101,7 +103,7 @@ What you've been watching this season — the listless phases, the inability to 
 
 This analysis shows association, not causation. It does not isolate Slot's tactical choices from squad changes, Trent Alexander-Arnold's departure, injuries, fixture difficulty, or any other variable. It shows that the decline is visible in attacking xG, shot volume, shot quality, set-piece output, and independent match-stat signals — consistently, across two data sources.
 
-It does not adjust for opponent strength. A tackle count of 13.3/match means different things against different opposition. Opponent-adjusted metrics are planned but not yet complete.
+It does not adjust for opponent strength. A tackle count of 13.0/match means different things against different opposition. Opponent-adjusted metrics are planned but not yet complete.
 
 It does not predict next season.
 

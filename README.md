@@ -10,35 +10,35 @@ Data-driven analysis of Liverpool FC's tactical evolution across three seasons �
 
 ## Project Status
 
-**~75% complete** — analysis phase complete, 26 charts generated, entering content publishing phase.
+**Publishing phase.** Analysis complete, site live, Thread 1 published.
 
 | Phase | Status |
 |-------|--------|
 | Data collection (114 fixtures, 7 includes each) | ✅ Complete |
 | Data processing pipeline | ✅ Complete |
 | Understat Tier 2 (xG) + FBRef Tier 3 (PPDA) | ✅ Integrated |
-| Deep Dive 3.1: Full statistical comparison + ball zone presence | ✅ Complete |
-| Deep Dive 1.4: Game-state tactical shifts | ✅ Complete |
-| Analysis scripts 01–06 (replaces Jupyter execution) | ✅ Complete — 26 PNG charts generated |
-| Remaining deep-dive analyses (07–10) | ⏳ Planned |
-| GitHub Pages publication site | ✅ Live — Jekyll, PR #10 |
-| X/Twitter thread series | 🔄 Thread 1 drafted + adversarially reviewed, pending publish |
+| Statistical comparison + ball zone presence | ✅ Complete |
+| Game-state tactical shifts | ✅ Complete |
+| Analysis scripts 01–06 — 26 PNG charts generated | ✅ Complete |
+| GitHub Pages publication site | ✅ Live |
+| Thread 1: xG decline | ✅ Published |
+| Thread 2: The Trent Effect | ⏳ Drafted — publishing post season end (May 24) |
+| Remaining deep-dive analyses | ⏳ Planned |
 
 See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full phase breakdown and [`docs/status/DEEP_DIVE_PLAN.md`](docs/status/DEEP_DIVE_PLAN.md) for all 21 planned analyses.
 
 ---
 
-## Key Findings So Far
+## Key Findings (Updated May 2026 — 37/38 Y2 matches)
 
-- Results **regressed** in Y2: 2.14 (Klopp) → 2.12 (Y1) → 1.63 PPG (Y2)
-- Formation shifted: 4-3-3 → 4-2-3-1
-- Right-side attacking collapsed after Trent's transfer to Real Madrid (R-to-L ratio: 1.47 → 0.90)
-- **Confirmed** (Bonferroni-corrected, Klopp vs Slot Y2): Shots On Target −37.2% (d=0.88), Tackles −25.7% (d=0.86), Goal Attempts −29.3% (d=0.87)
-- **xG decline is quality, not luck**: xG/match 2.49 → 2.45 → 1.81 (−27%). All 3 seasons underperform xG by ~0.2/match consistently — Y2 regression is genuine chance quality decline
-- **Set-piece xG halved**: 0.679 → 0.487 → 0.339/match — Trent's departure directly measurable
-- **Pressing collapsed**: Tackles/match 17.9 → 13.3 (−26%, Bonferroni-confirmed)
-- **Deadlock problem**: Y2 scores 0.73 go-ahead goals/match from level, down 25% vs Y1/Klopp (0.97). Y2 leads in only 63% of games vs 82% Y1
-- **Second-half vulnerability**: Y2 concedes more after 60′; first-half goals dropped 48%
+- **PPG regressed**: 2.14 (Klopp) → 2.12 (Slot Y1) → 1.59 (Slot Y2, 37 matches)
+- **Attacking xG fell 30%**: 2.49 → 2.45 → 1.74 xG/match — observed across 37 matches via Understat
+- **Both levers broke in Y2**: shot volume fell (20.8→15.5/match) AND xG/shot fell (0.146→0.118) — no compensating factor
+- **Set-piece xG halved**: 0.679 → 0.487 → 0.339/match — consistent with Trent Alexander-Arnold's departure
+- **Defence also declined**: opponent xG 1.25 → 1.11 → 1.42/match
+- **Confirmed** (Bonferroni-corrected Mann-Whitney U, Klopp vs Slot Y2, 44 metrics): Ball Safe −13.5% (d=1.11), Shots Outside Box −38.6% (d=0.93), Shots On Target −37.2% (d=0.88), Goal Attempts −29.3% (d=0.87), Tackles −25.7% (d=0.86)
+- **Formation shifted**: 4-3-3 → 4-2-3-1; right-side attacking collapsed (R-to-L ratio: 1.47 → 0.90)
+- **Deadlock problem**: Y2 scores 0.73 go-ahead goals/match from level, vs 0.97 (Klopp/Y1)
 
 ---
 
@@ -113,7 +113,7 @@ football-analytics/
 |--------|---------|----------|-------|
 | 2023-24 | Klopp | 37 | Full season |
 | 2024-25 | Slot Y1 | 34 | Full season |
-| 2025-26 | Slot Y2 | 30 | Partial (season ongoing) |
+| 2025-26 | Slot Y2 | 37 | 37 of 38 matches — one remaining (May 24) |
 
 Per fixture, six processed CSVs:
 

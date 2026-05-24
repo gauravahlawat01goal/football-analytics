@@ -33,7 +33,7 @@ See [`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md) for full ph
 
 - **PPG regressed**: 2.16 (Klopp) → 2.21 (Slot Y1, title winners) → 1.58 (Slot Y2, 17W-9D-12L)
 - **Attacking xG fell 29%**: 2.49 → 2.45 → 1.77 xG/match — full 38-match season, Understat
-- **Both levers broke in Y2**: shot volume fell (20.8→15.5/match) AND xG/shot fell (0.146→0.118) — no compensating factor
+- **Both levers broke in Y2**: shot volume fell Klopp→Y2 (20.8→15.5/match) AND xG/shot fell Y1→Y2 (0.146→0.118) — no compensating factor
 - **Set-piece xG halved**: 0.679 → 0.487 → 0.339/match — consistent with Trent Alexander-Arnold's departure
 - **Defence also declined**: opponent xG 1.25 → 1.11 → 1.42/match
 - **Confirmed** (Mann-Whitney U, Bonferroni α/44, full 38-match seasons): Ball Safe −13.9% (d=1.06), Shots On Target −36.8% (d=0.90), Goal Attempts −29.5% (d=0.89), Tackles −27.0% (d=0.93)
@@ -113,9 +113,9 @@ football-analytics/
 
 | Season | Manager | Fixtures | Notes |
 |--------|---------|----------|-------|
-| 2023-24 | Klopp | 37 | Full season |
-| 2024-25 | Slot Y1 | 34 | Full season |
-| 2025-26 | Slot Y2 | 38 | Full season complete (38 of 38 matches) |
+| 2023-24 | Klopp | 38 | Full season (24W-10D-4L, 82 pts) |
+| 2024-25 | Slot Y1 | 38 | Full season (25W-9D-4L, 84 pts — title) |
+| 2025-26 | Slot Y2 | 38 | Full season complete (17W-9D-12L, 60 pts) |
 
 Per fixture, six processed CSVs:
 

@@ -109,7 +109,7 @@ permalink: /liverpool/decline/
       </table>
     </div>
     <p class="gap-insight">
-      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance, briefly pulling the gap to −0.06. The final match — Liverpool created 2.99 xG at Brentford but scored once — pulled it back to −0.11. The season ended closer to the historical pattern than those seven games suggested.
+      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance; then the final match at Brentford (2.99 xG, 1 goal) reversed much of it. The full-season gap settled at −0.11 — closer to the historical pattern than the late-season scoring suggested. The underlying xG of 1.77/match, down 29%, is the story.
     </p>
     <p class="table-note">
       Gap = Goals/match minus xG/match. Slot Y2: 38 of 38 matches — season complete.

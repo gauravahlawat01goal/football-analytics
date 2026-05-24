@@ -67,7 +67,7 @@ permalink: /liverpool/
       </div>
       <div class="finding-item">
         <div class="finding-label">Set-piece xG halved</div>
-        <div class="finding-detail">0.679 → 0.487 → 0.339 per match. Consistent with the impact of Trent Alexander-Arnold's departure.</div>
+        <div class="finding-detail">0.679 → 0.487 → 0.339 per match (first 30 Y2 matches, Understat shot-level data). Consistent with the impact of Trent Alexander-Arnold's departure.</div>
       </div>
       <div class="finding-item">
         <div class="finding-label">Pressing collapsed</div>

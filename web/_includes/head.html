@@ -6,11 +6,16 @@
 <link rel="canonical" href="{{ page.url | absolute_url }}" />
 
 <!-- Open Graph -->
+{% if page.layout == 'post' %}
 <meta property="og:type" content="article" />
+{% else %}
+<meta property="og:type" content="website" />
+{% endif %}
 <meta property="og:site_name" content="{{ site.title }}" />
 <meta property="og:title" content="{{ page.title | default: site.title }}" />
 <meta property="og:description" content="{{ page.description | default: site.description }}" />
 <meta property="og:url" content="{{ page.url | absolute_url }}" />
+<meta property="og:image" content="{{ site.url }}{{ site.baseurl }}/assets/figures/xg_per_match.png" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -18,3 +23,4 @@
 <meta name="twitter:creator" content="@{{ site.twitter_username }}" />
 <meta name="twitter:title" content="{{ page.title | default: site.title }}" />
 <meta name="twitter:description" content="{{ page.description | default: site.description }}" />
+<meta name="twitter:image" content="{{ site.url }}{{ site.baseurl }}/assets/figures/xg_per_match.png" />

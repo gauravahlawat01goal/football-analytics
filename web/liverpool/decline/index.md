@@ -240,10 +240,10 @@ social_image: "/assets/figures/xg_per_match_social.png"
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by Gaurav Ahlawat,
-      data analyst. Independent project, no affiliation with Liverpool FC or any data provider.
-      Full methodology at <a href="{{ '/methodology/' | relative_url }}">methodology →</a> ·
-      Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.
+      Written by Gaurav Ahlawat, a data and AI systems builder trying to make sense of Liverpool through the numbers.
+      Built independently in his free time.
+      <a href="{{ '/methodology/' | relative_url }}">Methodology</a> ·
+      <a href="https://github.com/{{ site.github_username }}/football-analytics">Analysis code</a>.
     </p>
   </section>
 

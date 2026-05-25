@@ -3,6 +3,7 @@ layout: default
 title: "Something broke in year two | Liverpool FC Analysis"
 description: "Three seasons of data on Liverpool FC's decline - full season, 38 matches. xG fell 29%, PPG fell from 2.16 to 1.58. The numbers show where it broke."
 permalink: /liverpool/decline/
+social_image: "/assets/figures/xg_per_match_social.png"
 ---
 
 <header>
@@ -33,6 +34,11 @@ permalink: /liverpool/decline/
         <h3>Liverpool's attacking xG fell 29% across three seasons</h3>
       </div>
     </div>
+
+    <figure class="analysis-figure">
+      <img src="{{ '/assets/figures/xg_per_match.png' | relative_url }}" alt="Liverpool xG per match: Klopp 2.49, last year 2.45, this year 1.77" />
+      <figcaption>Liverpool's attacking xG held steady last year, then dropped sharply this year.</figcaption>
+    </figure>
 
     <div class="stats-grid">
       <div class="stat-card">
@@ -115,6 +121,48 @@ permalink: /liverpool/decline/
       Gap = Goals/match minus xG/match; a small negative gap means goals just below xG (normal finishing), a large negative gap is the signature of bad luck. Slot Y2: 38 of 38 matches - season complete.
       xG data: Understat (full seasons). PPG: official PL record (38 matches each). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the strongest figure in each column - highest for attacking metrics, lowest for opponent xG.
     </p>
+
+    <div class="mini-chart-grid" aria-label="Attacking output charts">
+      <figure class="mini-chart">
+        <figcaption>Shot volume fell again this year.</figcaption>
+        <div class="bar-row">
+          <span class="bar-label">Klopp 23–24</span>
+          <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+          <span class="bar-value">20.8</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Last year</span>
+          <span class="bar-track"><span class="bar-fill muted" style="width:82%"></span></span>
+          <span class="bar-value">17.1</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">This year</span>
+          <span class="bar-track"><span class="bar-fill alert" style="width:75%"></span></span>
+          <span class="bar-value">15.5</span>
+        </div>
+        <p>Shots per match. This year used the first 30-match shot-level pull.</p>
+      </figure>
+
+      <figure class="mini-chart">
+        <figcaption>Set-piece output almost halved.</figcaption>
+        <div class="bar-row">
+          <span class="bar-label">Klopp 23–24</span>
+          <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+          <span class="bar-value">0.679</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Last year</span>
+          <span class="bar-track"><span class="bar-fill muted" style="width:72%"></span></span>
+          <span class="bar-value">0.487</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">This year</span>
+          <span class="bar-track"><span class="bar-fill alert" style="width:50%"></span></span>
+          <span class="bar-value">0.339</span>
+        </div>
+        <p>Set-piece xG per match. This year used the first 30-match shot-level pull.</p>
+      </figure>
+    </div>
   </section>
 
   <!-- ── Confirmed findings ── -->

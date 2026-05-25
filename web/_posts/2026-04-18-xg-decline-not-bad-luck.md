@@ -6,17 +6,18 @@ updated: 2026-05-24
 thread_num: 1
 status: live
 status_label: "Live"
-description: "Three seasons of data show Liverpool's attacking xG fell 29% in Slot Y2 - from 2.49 to 1.77 per match. Full season, 38 matches. The decline is visible before the finishing, not in it."
-excerpt: "Liverpool's attacking xG fell from 2.49 (Klopp) to 1.77 (Slot Y2) - a 29% drop across the full 38-match season. Shot volume declined, shot quality declined, set-piece output halved. The problem starts before finishing."
+description: "Liverpool fans felt the attack had become slower and less threatening. Three seasons of data show why: attacking xG fell 29% in Slot Y2, from 2.49 to 1.77 per match."
+excerpt: "Liverpool fans felt the attack had become slower and less threatening. The data points to the same place: xG fell 29%, shot volume declined, shot quality declined, and set-piece output halved."
+social_image: "/assets/figures/xg_per_match_social.png"
 ---
 
-Ask most Liverpool fans what went wrong in Slot's second season and they'll tell you the same thing: bad luck, near misses, posts, goalkeepers. The results didn't reflect the performances, the story goes. Things will turn.
+Ask Liverpool fans what went wrong in Slot's second season and the answer was rarely abstract. It felt slow. It felt safe. Possession moved without enough incision, attacks stalled before the box, and too many matches had the same uneasy rhythm: Liverpool had the ball, but not the old threat.
 
-Three seasons of data say something different. The decline wasn't in the finishing. It was in the chances themselves - and it was there long before the goals dried up.
+The numbers point to the same place. This was not just a finishing slump or a run of near misses. The decline was in the chances themselves - fewer of them, worse ones, and fewer easy routes to goal.
 
 ## The numbers tell a different story
 
-Expected goals gives us a clean test. If Liverpool were simply unlucky, xG would stay high while goals lagged behind. If xG itself falls, the problem starts before the finishing: in chance creation.
+Expected goals gives us a clean test. If Liverpool were creating the same level of danger but simply failing to finish, xG would stay high while goals lagged behind. If xG itself falls, the problem starts earlier: tempo, progression, shot selection, and chance creation.
 
 | Season | xG / match | Goals / match | Gap |
 |--------|-----------|---------------|-----|
@@ -24,14 +25,14 @@ Expected goals gives us a clean test. If Liverpool were simply unlucky, xG would
 | Slot Y1 2024–25 | 2.45 | 2.26 | −0.19 |
 | Slot Y2 2025–26 | **1.77** | **1.66** | −0.11 |
 
-*Source: Understat. Slot Y2: full 38-match season.*
+*Source: Understat match-level xG. Slot Y2: full 38-match season. Percent changes are rounded from the displayed per-match means.*
 
 <figure class="post-figure">
   <img src="{{ '/assets/figures/xg_per_match.png' | relative_url }}" alt="xG per match by season: Klopp 2.49, Slot Y1 2.45, Slot Y2 1.77" />
   <figcaption>xG per match across three seasons. The Y2 drop is the sharpest single-season change of the three.</figcaption>
 </figure>
 
-The xG/match column is the headline: 2.49 to 1.77, the steepest single-season fall of the three. But the column that settles the bad-luck argument is the one beside it - the gap between expected and actual goals.
+The xG/match column is the headline: 2.49 to 1.77, the steepest single-season fall of the three. That is the statistical version of what supporters were watching: less sustained danger, fewer high-value attacks, and a team that could no longer turn possession into pressure at the same rate. The gap column matters too, because it separates a chance-creation problem from a finishing problem.
 
 ## The finishing was never the problem
 
@@ -39,14 +40,14 @@ If Liverpool were simply unlucky, the gap would blow out: lots of xG, far fewer 
 
 <div class="insight-callout">
   <div class="insight-label">The key insight</div>
-  <p>Through 30 matches, Liverpool finished their chances exactly as well as they had in the two previous seasons. The drop was upstream - fewer chances, and worse ones - not in front of goal.</p>
+  <p>Through 30 matches, Liverpool finished their chances almost exactly as they had in the two previous seasons. The drop was upstream - fewer chances, worse ones, and less attacking pressure before the shot.</p>
 </div>
 
 The full-season gap of −0.11 is flattered by a short late run of overperformance across matches 31–37, then partly corrected on the final day at Brentford, where Liverpool generated 2.99 xG, scored once, and drew 1–1. The late scoring was variance. The xG itself - 1.77 per match, down 29% from Klopp's 2.49 - was the season in miniature.
 
 ## Both levers broke simultaneously
 
-So where did the chances go? To answer that, the next two tables draw on a separate, earlier data pull. *Note: shot volume and xG/shot figures are based on the first 30 matches of Y2 from a shot-level data pull; match-level xG reflects the complete 38-match season throughout.*
+So where did the chances go? To answer that, the next two tables draw on a separate shot-level data pull. *Note: shot volume, xG/shot, and set-piece xG use the original Understat shot-level pull; Y2 covers the first 30 matches in that pull. Match-level xG, goals, opponent xG, and PPG reflect the complete 38-match season throughout.*
 
 Slot's first season had a logic to it:
 
@@ -58,7 +59,7 @@ Slot's first season had a logic to it:
 
 Slot's first season took fewer shots but made them count, at 0.146 xG per shot against Klopp's 0.123. Total xG barely moved, goals were identical, and the season ended with a Premier League title. The trade-off - volume for quality - held the output steady.
 
-This season broke that logic. Volume fell again, to 15.5 shots per match - but this time quality didn't compensate. At 0.118 xG per shot, the chances were worse than Klopp's, not better. Volume and quality moved the wrong way together, and there was nothing left to cushion the fall.
+This season broke that logic. Volume fell again, to 15.5 shots per match - but this time quality didn't compensate. At 0.118 xG per shot, the chances were worse than Klopp's, not better. That is where the complaints about slow, sterile possession show up in the data: fewer attacks ending in shots, and the shots that did arrive were not good enough to offset the lower volume.
 
 ## Set pieces: a specific tactical fingerprint
 
@@ -89,7 +90,7 @@ A second dataset, covering full Premier League seasons from SportsMonks, confirm
 - **Goal attempts: −29.5%**
 - **Tackles per match: −27.0%** (17.8 → 13.0 per match)
 
-These are not marginal signals. They are not close calls. The press is down, the shots are fewer, and the quality is worse — the results are arithmetic.
+These are not marginal signals. They are not close calls. The press is down, the shots are fewer, secure-possession events are lower, and the quality is worse. The football looked slower and less forceful because the underlying actions that create pressure had declined.
 
 What you watched in 2025–26 - the listless phases, the inability to break teams down, the sense that the old danger had drained away - is documented across three years of data from two sources.
 
@@ -103,6 +104,6 @@ You weren't imagining it.
 
 <div class="post-footer-note">
   <p><strong>Data:</strong> Understat (xG) and SportsMonks API v3 (match statistics). Match-level xG covers the full 38-match Y2 season; xG/shot and set-piece figures are from the first 30 matches.</p>
-  <p><strong>Statistical rigor:</strong> Findings above were tested with Mann-Whitney U and Bonferroni correction over 44 metrics (α/44 ≈ 0.00114). All four metrics passed this threshold and showed large to very large effect sizes (Cohen's d between 0.89 and 1.06). Klopp-vs-Y2 comparisons are Bonferroni-confirmed; Y1-vs-Y2 comparisons are directional signals only.</p>
+  <p><strong>Statistical rigor:</strong> Findings above were tested with Mann-Whitney U and Bonferroni correction over 44 metrics (α/44 ≈ 0.00114). All four metrics passed this threshold and showed large to very large effect sizes: Ball Safe d=1.06, Shots on Target d=0.90, Goal Attempts d=0.89, Tackles d=0.93. Klopp-vs-Y2 comparisons are Bonferroni-confirmed; Y1-vs-Y2 comparisons are directional signals only.</p>
   <p><a href="https://github.com/gauravahlawat01goal/football-analytics">Full methodology and analysis code →</a></p>
 </div>

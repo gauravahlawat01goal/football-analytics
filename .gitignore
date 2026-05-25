@@ -151,3 +151,9 @@ logs/
 *.csv
 *.json
 *.parquet
+
+# Jekyll / local Ruby
+web/.bundle/
+web/.jekyll-cache/
+web/_site/
+web/vendor/bundle/

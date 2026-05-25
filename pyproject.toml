@@ -17,7 +17,7 @@ python-dotenv = "^1.0.0"
 
 [tool.poetry.group.analysis.dependencies]
 scipy = "^1.13"
-matplotlib = "^3.9"
+matplotlib = "^3.10"
 seaborn = "^0.13"
 numpy = "^1.26"
 jupyter = "^1.0"

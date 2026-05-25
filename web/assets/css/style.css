@@ -264,27 +264,6 @@ h2 {
   letter-spacing: 0.01em;
 }
 
-.analysis-figure {
-  margin: 1.5rem 0 2rem;
-}
-
-.analysis-figure img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: #FFFFFF;
-}
-
-.analysis-figure figcaption {
-  font-family: var(--sans);
-  font-size: 0.76rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-top: 0.55rem;
-}
-
 /* ── Stats grid ── */
 .stats-grid {
   display: grid;
@@ -401,6 +380,10 @@ h2 {
 .mini-chart {
   border-top: 1px solid var(--border);
   padding-top: 1rem;
+}
+
+.mini-chart-wide {
+  margin: 1.25rem 0 2rem;
 }
 
 .mini-chart figcaption {

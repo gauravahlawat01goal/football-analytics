@@ -35,9 +35,24 @@ social_image: "/assets/figures/xg_per_match_social.png"
       </div>
     </div>
 
-    <figure class="analysis-figure">
-      <img src="{{ '/assets/figures/xg_per_match.png' | relative_url }}" alt="Liverpool xG per match: Klopp 2.49, last year 2.45, this year 1.77" />
+    <figure class="mini-chart mini-chart-wide">
       <figcaption>Liverpool's attacking xG held steady last year, then dropped sharply this year.</figcaption>
+      <div class="bar-row">
+        <span class="bar-label">Klopp 23–24</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+        <span class="bar-value">2.49</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Last year</span>
+        <span class="bar-track"><span class="bar-fill muted" style="width:98%"></span></span>
+        <span class="bar-value">2.45</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">This year</span>
+        <span class="bar-track"><span class="bar-fill alert" style="width:71%"></span></span>
+        <span class="bar-value">1.77</span>
+      </div>
+      <p>xG per match. Match-level Understat data, full 38-match seasons.</p>
     </figure>
 
     <div class="stats-grid">

@@ -8,7 +8,7 @@ permalink: /liverpool/decline/
 <header>
   <div class="badge">Liverpool FC · Slot Y2 Analysis</div>
   <h1>Something broke<br>in year two.</h1>
-  <p class="hero-sub-headline">Three seasons. Two data sources. One clear conclusion.</p>
+  <p class="hero-sub-headline">The numbers show exactly where the attacking model broke.</p>
   <p class="subtitle">Klopp's final season. Slot's first two. What the data says happened.</p>
 </header>
 
@@ -122,33 +122,34 @@ permalink: /liverpool/decline/
     <div class="section-label">What the tests confirm</div>
     <h2>These changes are real, not noise.</h2>
     <p class="section-intro">
-      The xG picture above comes from Understat. The following comes from a second, independent dataset -
+      The xG picture above comes from Understat. The following comes from a second dataset -
       SportsMonks match statistics across full Premier League seasons.
-      Mann-Whitney U with Bonferroni correction across 44 metrics (α/44 ≈ 0.00114).
-      Everything below survived that threshold.
     </p>
     <div class="confirmed-grid">
       <div class="confirmed-card">
         <div class="c-label">Ball Safe (secure possession)</div>
         <div class="c-value">−13.9%</div>
-        <div class="c-meta">Cohen's d = 1.06 - very large effect</div>
+        <div class="c-meta">Very large drop</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Shots on target</div>
         <div class="c-value">−36.8%</div>
-        <div class="c-meta">Cohen's d = 0.90 - large effect</div>
+        <div class="c-meta">Large drop</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Goal attempts</div>
         <div class="c-value">−29.5%</div>
-        <div class="c-meta">Cohen's d = 0.89 - large effect</div>
+        <div class="c-meta">Large drop</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Tackles / match</div>
         <div class="c-value">−27.0%</div>
-        <div class="c-meta">17.8 → 13.0 per match · d = 0.93</div>
+        <div class="c-meta">17.8 → 13.0 per match</div>
       </div>
     </div>
+    <p class="table-note" style="margin-top: 1rem;">
+      <strong>Statistical rigor:</strong> All four metrics passed a Mann-Whitney U test with Bonferroni correction across 44 variables (α/44 ≈ 0.00114) and showed large to very large effect sizes (Cohen's d between 0.89 and 1.06). See the <a href="{{ '/methodology/' | relative_url }}">methodology</a> for full details.
+    </p>
   </section>
 
   <!-- ── Thread series ── -->
@@ -156,7 +157,7 @@ permalink: /liverpool/decline/
     <div class="section-label">Read the analysis</div>
     <h2>The investigation into Liverpool's decline.</h2>
     <p class="section-intro">
-      Each piece stands alone. Start with the first - it's the foundation everything else builds on.
+      The first piece covers the headline xG decline, while subsequent threads explore pressing and set pieces in detail.
     </p>
     <div class="thread-list">
       {% assign sorted_posts = site.posts | sort: 'thread_num' %}

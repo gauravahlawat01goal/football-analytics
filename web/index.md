@@ -6,9 +6,9 @@ description: "Data-driven football analysis. Liverpool FC three-season study - x
 
 <header>
   <div class="badge">Football Analytics</div>
-  <h1>Data-driven analysis<br>of the game.</h1>
+  <h1>Football analysis.</h1>
   <p class="hero-sub-headline">Independent football research. Starting with Liverpool FC.</p>
-  <p class="subtitle">Statistical analysis combining match data, per-shot xG, and pressing metrics. Built to answer specific questions - not just describe what happened.</p>
+  <p class="subtitle">Statistical analysis combining match data, per-shot xG, and pressing metrics to explain what changed on the pitch.</p>
 </header>
 
 <main>
@@ -25,7 +25,7 @@ description: "Data-driven football analysis. Liverpool FC three-season study - x
       <div class="featured-card-content">
         <div class="featured-eyebrow">Slot Y2 2025–26 · Season complete</div>
         <h3>Something broke in year two.</h3>
-        <p>xG/match fell 29% from Klopp (2.49 → 1.77). Shot volume declined. Shot quality declined. Set-piece xG halved. Two independent datasets point to the same conclusion.</p>
+        <p>xG/match fell 29% from Klopp (2.49 → 1.77). Shot volume, shot quality, and set-piece output all declined. Two datasets point to the same conclusion.</p>
         <div class="featured-stats">
           <span>1.77 xG / match</span>
           <span>1.58 PPG</span>

@@ -20,7 +20,7 @@ scipy = "^1.13"
 matplotlib = "^3.9"
 seaborn = "^0.13"
 numpy = "^1.26"
-jupyter = "^1.0"
+jupyter = "^1.1"
 ipykernel = "^6.29"
 mplsoccer = "^1.6.1"
 # Tier 2 (xG enrichment): installed via pip due to certifi pin conflicts

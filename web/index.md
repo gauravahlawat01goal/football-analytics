@@ -2,6 +2,7 @@
 layout: default
 title: "Football Analytics | Gaurav Ahlawat"
 description: "Data-driven football analysis. Liverpool FC three-season study - xG, pressing, set pieces, game state."
+social_image: "/assets/figures/xg_per_match_social.png"
 ---
 
 <header>
@@ -66,3 +67,4 @@ description: "Data-driven football analysis. Liverpool FC three-season study - x
   </section>
 
 </main>
+

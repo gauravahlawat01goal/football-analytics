@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Something broke in year two | Liverpool FC Analysis"
-description: "Three seasons of data on Liverpool FC's decline — full season, 38 matches. xG fell 29%, PPG fell from 2.16 to 1.58. The numbers show where it broke."
+description: "Three seasons of data on Liverpool FC's decline - full season, 38 matches. xG fell 29%, PPG fell from 2.16 to 1.58. The numbers show where it broke."
 permalink: /liverpool/decline/
 ---
 
@@ -19,7 +19,7 @@ permalink: /liverpool/decline/
     <div class="section-label">The number that started this</div>
     <h2>Liverpool's expected goals dropped by nearly a third.</h2>
     <p class="section-intro">
-      Slot's first season was efficient — fewer shots, better quality, same output. Year two lost both.
+      Slot's first season was efficient - fewer shots, better quality, same output. Year two lost both.
       This is not a finishing slump. The underlying chances themselves got worse.
     </p>
 
@@ -36,7 +36,7 @@ permalink: /liverpool/decline/
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="label">Points per game — Slot Y2</div>
+        <div class="label">Points per game - Slot Y2</div>
         <div class="value" style="color:var(--red)">1.58</div>
         <div class="delta down">↓ from 2.16 (Klopp) and 2.21 (Slot Y1)</div>
       </div>
@@ -46,9 +46,9 @@ permalink: /liverpool/decline/
         <div class="delta down">↓ 50% from Klopp era (0.679)</div>
       </div>
       <div class="stat-card">
-        <div class="label">Opponent xG / match — Slot Y2</div>
+        <div class="label">Opponent xG / match - Slot Y2</div>
         <div class="value" style="color:var(--red)">1.42</div>
-        <div class="delta down">↑ from 1.11 (Slot Y1) — defence declined too</div>
+        <div class="delta down">↑ from 1.11 (Slot Y1) - defence declined too</div>
       </div>
     </div>
   </section>
@@ -58,7 +58,7 @@ permalink: /liverpool/decline/
     <div class="section-label">Three seasons</div>
     <h2>Every number moved in the wrong direction.</h2>
     <p class="section-intro">
-      Slot Y1 had a coherent model — fewer shots, higher quality, same goals. Y2 broke that model without replacing it. Look at the Gap column.
+      Slot Y1 had a coherent model - fewer shots, higher quality, same goals. Y2 broke that model without replacing it. Look at the Gap column.
     </p>
     <div style="overflow-x: auto;">
       <table class="comparison-table">
@@ -109,11 +109,11 @@ permalink: /liverpool/decline/
       </table>
     </div>
     <p class="gap-insight">
-      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 — consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance; then the final match at Brentford (2.99 xG, 1 goal, 1–1) reversed much of it. The full-season gap settled at −0.11 — closer to the historical pattern than the late-season scoring suggested. The underlying xG of 1.77/match, down 29%, is the story.
+      The Gap column tells the finishing story. For the first 30 matches of Y2 the gap was −0.21 - consistent with Klopp and Slot Y1. Matches 31–37 saw unusual overperformance; then the final match at Brentford (2.99 xG, 1 goal, 1–1) reversed much of it. The full-season gap settled at −0.11 - closer to the historical pattern than the late-season scoring suggested. The underlying xG of 1.77/match, down 29%, is the story.
     </p>
     <p class="table-note">
-      Gap = Goals/match minus xG/match; a small negative gap means goals just below xG (normal finishing), a large negative gap is the signature of bad luck. Slot Y2: 38 of 38 matches — season complete.
-      xG data: Understat (full seasons). PPG: official PL record (38 matches each). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the strongest figure in each column — highest for attacking metrics, lowest for opponent xG.
+      Gap = Goals/match minus xG/match; a small negative gap means goals just below xG (normal finishing), a large negative gap is the signature of bad luck. Slot Y2: 38 of 38 matches - season complete.
+      xG data: Understat (full seasons). PPG: official PL record (38 matches each). xG/shot and set-piece xG based on first 30 matches of Y2. Highlighted cells are the strongest figure in each column - highest for attacking metrics, lowest for opponent xG.
     </p>
   </section>
 
@@ -122,7 +122,7 @@ permalink: /liverpool/decline/
     <div class="section-label">What the tests confirm</div>
     <h2>These changes are real, not noise.</h2>
     <p class="section-intro">
-      The xG picture above comes from Understat. The following comes from a second, independent dataset —
+      The xG picture above comes from Understat. The following comes from a second, independent dataset -
       SportsMonks match statistics across full Premier League seasons.
       Mann-Whitney U with Bonferroni correction across 44 metrics (α/44 ≈ 0.00114).
       Everything below survived that threshold.
@@ -131,17 +131,17 @@ permalink: /liverpool/decline/
       <div class="confirmed-card">
         <div class="c-label">Ball Safe (secure possession)</div>
         <div class="c-value">−13.9%</div>
-        <div class="c-meta">Cohen's d = 1.06 — very large effect</div>
+        <div class="c-meta">Cohen's d = 1.06 - very large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Shots on target</div>
         <div class="c-value">−36.8%</div>
-        <div class="c-meta">Cohen's d = 0.90 — large effect</div>
+        <div class="c-meta">Cohen's d = 0.90 - large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Goal attempts</div>
         <div class="c-value">−29.5%</div>
-        <div class="c-meta">Cohen's d = 0.89 — large effect</div>
+        <div class="c-meta">Cohen's d = 0.89 - large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Tackles / match</div>
@@ -156,7 +156,7 @@ permalink: /liverpool/decline/
     <div class="section-label">Read the analysis</div>
     <h2>The investigation into Liverpool's decline.</h2>
     <p class="section-intro">
-      Each piece stands alone. Start with the first — it's the foundation everything else builds on.
+      Each piece stands alone. Start with the first - it's the foundation everything else builds on.
     </p>
     <div class="thread-list">
       {% assign sorted_posts = site.posts | sort: 'thread_num' %}
@@ -176,7 +176,7 @@ permalink: /liverpool/decline/
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a>,
+      Analysis by Gaurav Ahlawat,
       data analyst. Independent project, no affiliation with Liverpool FC or any data provider.
       Full methodology at <a href="{{ '/methodology/' | relative_url }}">methodology →</a> ·
       Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.

@@ -1,13 +1,12 @@
 title: "Football Analytics | Gaurav Ahlawat"
-description: "Independent, data-driven football analysis. First project: Liverpool FC across three seasons — Klopp 2023–24, Slot 2024–25 and 2025–26."
+description: "Independent, data-driven football analysis. First project: Liverpool FC across three seasons - Klopp 2023–24, Slot 2024–25 and 2025–26."
 author: "Gaurav Ahlawat"
 baseurl: "/football-analytics"   # overridden to "" by Netlify env
 url: "https://gauravahlawat01goal.github.io"
-twitter_username: gauravahlawat01goal
 github_username: gauravahlawat01goal
+social_image: "/assets/figures/xg_per_match_social.png"
 
 # Build
 markdown: kramdown
 permalink: /analysis/:year/:month/:day/:title/
 exclude: ["node_modules", "Gemfile", "Gemfile.lock"]
-

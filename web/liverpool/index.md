@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Liverpool FC Analysis | Gaurav Ahlawat"
-description: "Data-driven analysis of Liverpool FC across three seasons — Klopp 2023–24, Slot Y1 2024–25, Slot Y2 2025–26. xG, pressing, set pieces, game state."
+description: "Data-driven analysis of Liverpool FC across three seasons - Klopp 2023–24, Slot Y1 2024–25, Slot Y2 2025–26. xG, pressing, set pieces, game state."
 permalink: /liverpool/
 ---
 
@@ -20,7 +20,7 @@ permalink: /liverpool/
     <h2>Something broke in year two.</h2>
     <p class="section-intro">
       The flagship analysis. Liverpool's Slot Y2 regression examined across xG, shot volume, shot quality,
-      set-piece output, and pressing intensity — using two independent datasets.
+      set-piece output, and pressing intensity - using two independent datasets.
     </p>
     <div class="featured-card">
       <div class="featured-card-content">
@@ -87,7 +87,7 @@ permalink: /liverpool/
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a>,
+      Analysis by Gaurav Ahlawat,
       data analyst. Independent project, no affiliation with Liverpool FC.
       Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.
     </p>

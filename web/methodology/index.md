@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Methodology | Liverpool FC Analysis"
-description: "How the three-season Liverpool analysis was built — data sources, statistical tests, and what the findings can and cannot claim."
+description: "How the three-season Liverpool analysis was built - data sources, statistical tests, and what the findings can and cannot claim."
 permalink: /methodology/
 ---
 
@@ -21,17 +21,17 @@ permalink: /methodology/
       <div class="source-card">
         <div class="tier">Tier 1 · Match data</div>
         <h4>SportsMonks API v3</h4>
-        <p>114 processed fixtures across three seasons. 44 match statistics per team per match — shots, tackles, passes, possession, interceptions, key passes, big chances, and more. Also: lineups, formations, ball coordinates, goals, and scores.</p>
+        <p>114 processed fixtures across three seasons. 44 match statistics per team per match - shots, tackles, passes, possession, interceptions, key passes, big chances, and more. Also: lineups, formations, ball coordinates, goals, and scores.</p>
       </div>
       <div class="source-card">
         <div class="tier">Tier 2 · xG enrichment</div>
         <h4>Understat</h4>
-        <p>Match-level xG: all 114 fixtures across three complete seasons. Per-shot records with coordinates: 106 fixtures — full Klopp and Slot Y1, plus the first 30 of Slot Y2. Enables xG/match, xG/shot, and open-play vs set-piece breakdown.</p>
+        <p>Match-level xG: all 114 fixtures across three complete seasons. Per-shot records with coordinates: 106 fixtures - full Klopp and Slot Y1, plus the first 30 of Slot Y2. Enables xG/match, xG/shot, and open-play vs set-piece breakdown.</p>
       </div>
       <div class="source-card">
         <div class="tier">Tier 3 · Pressing metrics</div>
         <h4>FBRef</h4>
-        <p>PPDA (passes allowed per defensive action) per match — a more precise pressing intensity proxy than tackle counts. Integration in progress; current pressing analysis uses SportsMonks tackle and interception data.</p>
+        <p>PPDA (passes allowed per defensive action) per match - a more precise pressing intensity proxy than tackle counts. Integration in progress; current pressing analysis uses SportsMonks tackle and interception data.</p>
       </div>
     </div>
     <p class="table-note" style="margin-top:0.85rem;">
@@ -49,7 +49,7 @@ permalink: /methodology/
       <p>
         <strong>Confirmatory analysis</strong> (Klopp 2023–24 vs Slot Y2 2025–26): Mann-Whitney U tests
         with Bonferroni correction across a family of 44 statistical metrics (α/44 ≈ 0.00114).
-        Mann-Whitney U is a non-parametric rank-based test — appropriate for match statistics, which
+        Mann-Whitney U is a non-parametric rank-based test - appropriate for match statistics, which
         are bounded and often skewed. The original notebook analysis used Welch's t-test; the confirmed
         findings below hold under both approaches. Only findings that survive the Bonferroni threshold
         are reported as <strong>confirmed</strong>. Full-season data used: 38 Klopp matches, 38 Y2 matches.
@@ -62,7 +62,7 @@ permalink: /methodology/
       <p>
         <strong>Effect sizes</strong>: All findings include Cohen's d (standardised mean difference).
         d = 0.2 is small, d = 0.5 is medium, d = 0.8 is large. The confirmed findings range from
-        d = 0.89 to d = 1.06 — large to very large effects.
+        d = 0.89 to d = 1.06 - large to very large effects.
       </p>
       <p>
         <strong>House style</strong>: <em>Observed</em> = descriptive data trend from a single source.
@@ -83,17 +83,17 @@ permalink: /methodology/
       <div class="confirmed-card">
         <div class="c-label">Ball Safe (secure possession)</div>
         <div class="c-value">−13.9%</div>
-        <div class="c-meta">Cohen's d = 1.06 — very large effect</div>
+        <div class="c-meta">Cohen's d = 1.06 - very large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Shots on target</div>
         <div class="c-value">−36.8%</div>
-        <div class="c-meta">Cohen's d = 0.90 — large effect</div>
+        <div class="c-meta">Cohen's d = 0.90 - large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Goal attempts</div>
         <div class="c-value">−29.5%</div>
-        <div class="c-meta">Cohen's d = 0.89 — large effect</div>
+        <div class="c-meta">Cohen's d = 0.89 - large effect</div>
       </div>
       <div class="confirmed-card">
         <div class="c-label">Tackles / match</div>
@@ -109,18 +109,18 @@ permalink: /methodology/
     <h2>What this analysis cannot claim.</h2>
     <div class="method-box">
       <p>
-        <strong>No causation.</strong> This analysis documents associations between seasons — it does not
+        <strong>No causation.</strong> This analysis documents associations between seasons - it does not
         establish that any specific change (manager tactics, player departures, injuries, fixture difficulty)
         caused the observed declines. Where timing is noted (e.g. set-piece xG and Trent Alexander-Arnold's
         departure), it is presented as consistent with the data, not proven by it.
       </p>
       <p>
-        <strong>No opponent adjustment.</strong> All metrics are raw — they do not adjust for opponent
+        <strong>No opponent adjustment.</strong> All metrics are raw - they do not adjust for opponent
         strength. A tackles-per-match average of 13.0 means different things against different opposition.
         Opponent-adjusted metrics are planned but not yet complete.
       </p>
       <p>
-        <strong>Y2 sample.</strong> Slot Y2 is a complete season — 38 of 38 matches played (final match: Brentford away, May 24, 1–1). Match-level xG covers all 38 matches. xG/shot and set-piece xG are from the original 30-match Understat shot-level pull and are labelled accordingly.
+        <strong>Y2 sample.</strong> Slot Y2 is a complete season - 38 of 38 matches played (final match: Brentford away, May 24, 1–1). Match-level xG covers all 38 matches. xG/shot and set-piece xG are from the original 30-match Understat shot-level pull and are labelled accordingly.
       </p>
       <p>
         <strong>Mixed shot-level sample.</strong> The shot volume (15.5/match) and xG/shot (0.118) figures
@@ -141,7 +141,7 @@ permalink: /methodology/
     <h2>Running the analysis.</h2>
     <div class="method-box">
       <p>
-        The full pipeline — data collection, processing, and analysis — is available in the
+        The full pipeline - data collection, processing, and analysis - is available in the
         <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub repository</a>.
         Requires Python 3.11+, Poetry, and a SportsMonks API key.
       </p>

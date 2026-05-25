@@ -1,14 +1,14 @@
 ---
 layout: default
 title: "Football Analytics | Gaurav Ahlawat"
-description: "Data-driven football analysis. Liverpool FC three-season study — xG, pressing, set pieces, game state."
+description: "Data-driven football analysis. Liverpool FC three-season study - xG, pressing, set pieces, game state."
 ---
 
 <header>
   <div class="badge">Football Analytics</div>
   <h1>Data-driven analysis<br>of the game.</h1>
   <p class="hero-sub-headline">Independent football research. Starting with Liverpool FC.</p>
-  <p class="subtitle">Statistical analysis combining match data, per-shot xG, and pressing metrics. Built to answer specific questions — not just describe what happened.</p>
+  <p class="subtitle">Statistical analysis combining match data, per-shot xG, and pressing metrics. Built to answer specific questions - not just describe what happened.</p>
 </header>
 
 <main>
@@ -16,9 +16,9 @@ description: "Data-driven football analysis. Liverpool FC three-season study —
   <!-- ── Featured project ── -->
   <section>
     <div class="section-label">Featured project</div>
-    <h2>Liverpool FC — three seasons of data.</h2>
+    <h2>Liverpool FC - three seasons of data.</h2>
     <p class="section-intro">
-      How did the reigning champions regress so sharply? The analysis spans Slot's title-winning first season, his troubled second, and Klopp's final year as the baseline — using SportsMonks match statistics and Understat per-shot xG across 114 fixtures.
+      How did the reigning champions regress so sharply? The analysis spans Slot's title-winning first season, his troubled second, and Klopp's final year as the baseline - using SportsMonks match statistics and Understat per-shot xG across 114 fixtures.
     </p>
 
     <div class="featured-card">
@@ -58,7 +58,7 @@ description: "Data-driven football analysis. Liverpool FC three-season study —
   <!-- ── About ── -->
   <section class="about-section">
     <p class="about-line">
-      Analysis by <a href="https://twitter.com/{{ site.twitter_username }}">Gaurav Ahlawat</a>,
+      Analysis by Gaurav Ahlawat,
       data analyst. Liverpool FC is the first project in an ongoing series covering the Premier League,
       Bundesliga, La Liga, and Serie A.
       Analysis code on <a href="https://github.com/{{ site.github_username }}/football-analytics">GitHub</a>.

@@ -2,7 +2,7 @@
 layout: default
 ---
 <main>
-  <a href="{{ '/liverpool/decline/' | relative_url }}" class="back-link">← Liverpool analysis</a>
+  <a href="{{ page.back_url | default: '/liverpool/' | relative_url }}" class="back-link">{{ page.back_label | default: '← Liverpool analysis' }}</a>
   <div class="post-header">
     <div class="post-meta">
       {% assign byline_date = page.updated | default: page.date %}

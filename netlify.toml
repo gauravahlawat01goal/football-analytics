@@ -8,6 +8,18 @@
 
 # Override baseurl for Netlify (served from root, not /football-analytics)
 [[redirects]]
+  from = "/alonso-liverpool-fit"
+  to   = "/analysis/2026/05/31/xabi-alonso-bigger-swing-not-easier-fit/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/alonso-liverpool-fit/"
+  to   = "/analysis/2026/05/31/xabi-alonso-bigger-swing-not-easier-fit/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to   = "/:splat"
   status = 200

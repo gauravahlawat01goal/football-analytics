@@ -17,6 +17,9 @@ layout: null
     {% if page.url contains "/assets/" or page.url contains ".xml" or page.url contains ".txt" %}
       {% assign include_page = false %}
     {% endif %}
+    {% if page.sitemap == false %}
+      {% assign include_page = false %}
+    {% endif %}
     {% if include_page %}
   <url>
     <loc>{{ page.url | absolute_url }}</loc>

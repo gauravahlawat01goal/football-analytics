@@ -151,6 +151,7 @@ logs/
 *.csv
 *.json
 *.parquet
+*.pdf
 
 # Jekyll / local Ruby
 web/.bundle/

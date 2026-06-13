@@ -8,6 +8,7 @@ This package contains modules for processing and transforming raw football data:
 - Match statistics processing
 - Match scores processing
 - Understat data processing
+- Wyscout report PDF processing
 """
 
 from .ball_coordinates import BallCoordinateProcessor
@@ -17,6 +18,7 @@ from .player_database import PlayerIDExtractor
 from .scores import ScoresProcessor
 from .statistics import StatisticsProcessor
 from .understat import UnderstatProcessor
+from .wyscout_report import WyscoutReportProcessor
 
 __all__ = [
     "BallCoordinateProcessor",
@@ -26,4 +28,5 @@ __all__ = [
     "ScoresProcessor",
     "StatisticsProcessor",
     "UnderstatProcessor",
+    "WyscoutReportProcessor",
 ]

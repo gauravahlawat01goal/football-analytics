@@ -11,6 +11,7 @@
         <span class="site-nav-title">The Football Numbers</span>
       </a>
       <div class="site-nav-links">
+        <a href="{{ '/world-cup/' | relative_url }}" class="site-nav-text">World Cup</a>
         <a href="{{ '/liverpool/' | relative_url }}" class="site-nav-text">Liverpool</a>
         <a href="{{ '/methodology/' | relative_url }}" class="site-nav-text">Methodology</a>
         <a href="{{ '/about/' | relative_url }}" class="site-nav-text">About</a>
@@ -27,13 +28,14 @@
   <footer>
     <div class="footer-links">
       <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="{{ '/world-cup/' | relative_url }}">World Cup</a>
       <a href="{{ '/liverpool/' | relative_url }}">Liverpool</a>
       <a href="{{ '/methodology/' | relative_url }}">Methodology</a>
       <a href="{{ '/about/' | relative_url }}">About</a>
       <a href="https://github.com/{{ site.github_username }}/football-analytics" target="_blank" rel="noopener">GitHub</a>
       {% if site.twitter_username %}<a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" rel="noopener">X / Twitter</a>{% endif %}
     </div>
-    <p>Analysis by {{ site.author }} · Data: SportsMonks, Understat</p>
+    <p>Analysis by {{ site.author }} · Evidence from match data, reporting and video</p>
   </footer>
 </body>
 </html>

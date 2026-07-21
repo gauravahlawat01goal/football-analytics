@@ -88,6 +88,7 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; text-decor
   transition: color 0.15s;
   display: flex;
   align-items: center;
+  min-height: 32px;
 }
 
 .site-nav-links a:hover { color: var(--text); text-decoration: none; }
@@ -707,6 +708,13 @@ h2 {
 .status-soon::before { background: #aaa; }
 .status-planned::before { background: var(--border-strong); }
 
+.archive-link {
+  margin-top: 1.25rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 /* ── Methodology ── */
 .method-box {
   border-left: 2px solid var(--red);
@@ -896,11 +904,12 @@ footer a:hover { color: var(--text); }
   line-height: 1.8;
   color: var(--text-secondary);
   max-width: 680px;
+  overflow-wrap: anywhere;
 }
 
 .post-body h2 {
   font-family: var(--serif);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--text);
   border-bottom: 1px solid var(--border);
@@ -921,6 +930,26 @@ footer a:hover { color: var(--text); }
 .post-body p {
   margin-bottom: 1.25rem;
   color: var(--text-secondary);
+}
+
+.post-body .article-dek {
+  color: var(--text);
+  font-size: 1.16rem;
+  line-height: 1.7;
+  margin-bottom: 1.8rem;
+}
+
+.post-cover {
+  margin: 0 0 2rem;
+}
+
+.post-cover img {
+  width: 100%;
+  max-height: 430px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: block;
 }
 
 .post-body ul, .post-body ol { margin: 0 0 1.25rem 1.5rem; }
@@ -961,6 +990,8 @@ footer a:hover { color: var(--text); }
   border: 1px solid var(--border);
   margin: 1.75rem 0;
   font-variant-numeric: tabular-nums;
+  display: block;
+  overflow-x: auto;
 }
 
 .post-body table th {

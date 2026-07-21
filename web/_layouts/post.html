@@ -6,10 +6,17 @@ layout: default
   <div class="post-header">
     <div class="post-meta">
       {% assign byline_date = page.updated | default: page.date %}
-      Updated {{ byline_date | date: "%B %-d, %Y" }}
+      {% if page.series %}<span class="series-tag">{{ page.series }}</span>{% endif %}
+      <span>Published {{ page.date | date: "%B %-d, %Y" }}</span>
+      {% if page.updated and page.updated != page.date %}<span>· Updated {{ page.updated | date: "%B %-d, %Y" }}</span>{% endif %}
     </div>
     <h1>{{ page.title }}</h1>
   </div>
+  {% if page.cover_image %}
+  <figure class="post-cover">
+    <img src="{{ page.cover_image }}" alt="Cover image for {{ page.title | escape }}" />
+  </figure>
+  {% endif %}
   <div class="post-body">
     {{ content }}
   </div>
